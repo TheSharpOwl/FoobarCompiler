@@ -13,7 +13,7 @@ routine go5times is
     end
 
 type int is integer
-type float is real
+type real is float
 
 type student is record
     var age : int
