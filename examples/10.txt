@@ -16,7 +16,7 @@ routine ifFive (x) : boolean is
     return x = 5
 end
 
-type bool as boolean
+type bool هس boolean
 
 routine isSix (z) : bool is
     if z = 6 then
