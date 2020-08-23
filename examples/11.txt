@@ -1,4 +1,4 @@
-routine fib(n) : integer is
+routine fib(n : integer) : integer is
     if x = 1 or x = 2 then
         return 1
     else
@@ -6,35 +6,30 @@ routine fib(n) : integer is
     end
 end
 
-routine fill(a,x) is
+routine fill(a:array [] integer, x : integer) is
     for i in range 1 .. a.size loop
         a[i] := x
     end
 end
 
 
-# only for Primitive types !!!!!!
-routine swap(x,y) is
-    var z is x
-    x := y
-    y = z
-end
-
 # this is a comment (you can delete it later)
 # sorting function, if b is true, it makes a in non decreasing order
 # otherwise it will be in increasing order
 
-routine sort(a,b) is
+routine sort(a : array [] integer, b : boolean) is
     for i in range 1 .. a.size loop
         for j in range i .. a.size loop
             if b = (a[j] < a[i]) then
-                swap(a[j],a[i])
+                var z is a[i]
+                a[i] := a[j]
+                a[j] := z
             end
         end
     end
 end
 
-var a is array [10] integer
+var a is array [10] integers
 fill(a,0)
 sort(a,false)
 
