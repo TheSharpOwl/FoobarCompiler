@@ -1,0 +1,41 @@
+
+type int is integer
+
+routine calculate(int a, int b, int c) : integer is
+	return ((a + (b + (c - (a * b)))) + b) * (a + (a * 2 + (c - a)) - b)
+end
+
+
+var a is 3
+calculate(1, 2, a)
+
+
+routine f1() : real is
+	return 0.0
+end
+
+routine f2() : real is
+	return f1()
+end
+
+routing f3() : real is 
+	return f2()
+end
+
+routing f4() : real is 
+	return f3()
+end
+
+routing f5() : real is 
+	return f4()
+end
+
+routing f6() : real is 
+	return f5()
+end
+
+routing f7() is 
+	f6()
+end
+
+f7()
