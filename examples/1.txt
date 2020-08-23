@@ -13,7 +13,7 @@ routine power(int number, int to_power) : int is
 	end
 
 	for i in 0..to_power-1 loop
-		tmp *= number
+		tmp := tmp * number
 	end
 
 	return tmp
