@@ -1,0 +1,24 @@
+var number is integer
+number := 184893
+
+var originalNumber is integer
+originalNumber := number
+
+var isArmstrong is false
+
+var remainder is integer
+var result is 0
+
+routine findArmstrongNumber() is
+    
+    while originalNumber loop
+        remainder := originalNumber % 10
+        result := result + remainder * remainder * remainder
+        originalNumber := originalNumber / 10
+    end
+
+    if result = number then
+        isArmstrong := true
+    end
+
+end
