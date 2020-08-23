@@ -1,0 +1,13 @@
+var number is integer
+
+number := 1828329
+
+var reversedNumber = 0
+
+var remainder is integer
+
+while number loop
+	remainder := number % 10
+	reversedNumber := reversedNumber * 10 + remainder
+	number := number / 10
+end
