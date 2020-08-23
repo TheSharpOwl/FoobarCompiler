@@ -21,9 +21,8 @@ type student is record
     var attendance : array [5 + x] bool
 end
 
-var sasha : student is record
-    var age: int is 20
-    var gpa: float is 90.4
-    var attendance : array [15] bool
-end
+var sasha : student
+sasha.age := 20
+sasha.gpa := 90.4
+sasha.attendance[1] := true
 
