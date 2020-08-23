@@ -1,0 +1,29 @@
+# Program to reverse a list
+
+routine reverse(dataList: array [] integer) : array [] integer is
+    var length : integer = dataList.size
+
+    var s : integer is length
+
+    var newList is array [length] integer
+
+    foreach element from dataList loop
+        s := s - 1
+        newList[s] := element
+    end
+
+    return newList
+end
+
+
+
+var a is array [10] integer
+
+
+for i in range 1 .. a.size loop
+      a[i] := i
+end
+
+
+
+var b is array [] integer is reverse(a)

@@ -1,0 +1,22 @@
+# Program to check if year is a leap year or not
+
+routine leapYear(x : integer) : boolean is
+    if year % 4 = 0 then
+        if year % 100 = 0 then
+            if year % 400 = 0 then
+                return true
+            else
+                return false
+            end
+        else
+            return true
+        end
+    else
+        return false
+    end
+end
+
+var year : integer is 2000
+var isLeap : boolean is leapYear(year)
+
+
