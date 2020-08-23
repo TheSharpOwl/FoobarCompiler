@@ -1,0 +1,16 @@
+var myNewVariable is 1839
+
+routine checkIfItIsBiggerThen1500() is
+	while myNewVariable > 1500 loop
+		myNewVariable is myNewVariable - 1
+	end
+end
+
+
+var myNotArray is array [128] real
+
+routine createArrayWithNumbers() is
+	for index in range 1 .. myNotArray.size loop
+		myNotArray[index] := index * 1.01
+	end
+end
