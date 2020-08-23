@@ -1,5 +1,5 @@
 var number is integer
-number := 184893
+number := 184
 
 var originalNumber is integer
 originalNumber := number
