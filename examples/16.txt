@@ -1,29 +1,34 @@
-# Program to reverse a list
+type subject is record
+	var id : integer
+	var professorId : integer
+	var credits : integer
+end
 
-routine reverse(dataList: array [] integer) : array [] integer is
-    var length : integer = dataList.size
+routine compareSubjects(first: subject, second: subject) : boolean is
+     if first.id = second.id then
+         if first.professorId = second.professorId then
+             if first.credits = second.credits then
+                 return true
+             end
+         end
+     end
 
-    var s : integer is length
-
-    var newList is array [length] integer
-
-    foreach element from dataList loop
-        s := s - 1
-        newList[s] := element
-    end
-
-    return newList
+   return false
 end
 
 
+var math : subject
 
-var a is array [10] integer
-
-
-for i in range 1 .. a.size loop
-      a[i] := i
-end
+math.id = 5
+math.professorId = 3
+math.credits = 0
 
 
+var physics : subject
 
-var b is array [] integer is reverse(a)
+math.id = 0
+math.professorId = 0
+math.credits = -30
+
+
+var mathIsAPhysics : boolean is compareSubjects(math, physics)

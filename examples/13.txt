@@ -1,10 +1,8 @@
-# Program to convert kilometers to miles
-
 var x : integer is 3
 
 
 routine convertToMiles(x : integer) : real is
-    var convertFactor : real = 0.621371
+    var convertFactor : real is 0.621371
 
     return x * convertFactor
 end
