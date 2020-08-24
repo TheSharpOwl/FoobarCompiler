@@ -73,7 +73,7 @@ end
 
 
 routine decreaseDays(card : cardToDecrease, integer : days) is 
-	cardToDecrease.daysLeft -= days
+	cardToDecrease.daysLeft := cardToDecrease.daysLeft - days
 end
 
 routine changePriority(issue : issueToChange, integer : newPriority) is 
