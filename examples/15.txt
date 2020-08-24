@@ -1,5 +1,3 @@
-# Program to check if year is a leap year or not
-
 routine leapYear(x : integer) : boolean is
     if year % 4 = 0 then
         if year % 100 = 0 then
