@@ -10,7 +10,7 @@ end
 var myNotArray : array [128] real
 
 routine createArrayWithNumbers() is
-	for index in range 1 .. myNotArray.size loop
+	for index in 1 .. myNotArray.size loop
 		myNotArray[index] := index * 1.01
 	end
 end
