@@ -10,14 +10,14 @@ routine get5th(a : array [] integer) : integer is
     end
 end
 
-type ninja as record
+type ninja is record
     var HP : integer
     var color : bool
     var inventory : array [100] integer
 end
 
 routine doDamage(nj : ninja, damage : integer) is
-    nj.HP = nj.HP - damage
+    nj.HP := nj.HP - damage
 end
 
 routine resetInventory(nj : ninja) is

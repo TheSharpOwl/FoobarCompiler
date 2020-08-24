@@ -13,13 +13,10 @@ routine fill(a:array [] integer, x : integer) is
 end
 
 
-# this is a comment (you can delete it later)
-# sorting function, if b is true, it makes a in non decreasing order
-# otherwise it will be in increasing order
 
 routine sort(a : array [] integer, b : boolean) is
-    for i in range 1 .. a.size loop
-        for j in range i .. a.size loop
+    for i in 1 .. a.size loop
+        for j in i .. a.size loop
             if b = (a[j] < a[i]) then
                 var z is a[i]
                 a[i] := a[j]
@@ -29,7 +26,7 @@ routine sort(a : array [] integer, b : boolean) is
     end
 end
 
-var a is array [10] integers
+var a : array [10] integers
 fill(a,0)
 sort(a,false)
 

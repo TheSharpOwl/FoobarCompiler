@@ -1,7 +1,7 @@
 var x : integer is 5 + 5
 var y is 5.10 
 
-routine add5(z) : integer is
+routine add5(z : integer) : integer is
     return z + 5
 end
 
