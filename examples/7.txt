@@ -1,12 +1,12 @@
-var number is integer
+var number : integer
 number := 184
 
-var originalNumber is integer
+var originalNumber : integer
 originalNumber := number
 
 var isArmstrong is false
 
-var remainder is integer
+var remainder : integer
 var result is 0
 
 routine findArmstrongNumber() is
