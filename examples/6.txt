@@ -6,7 +6,7 @@ var reversedNumber = 0
 
 var remainder is integer
 
-while number loop
+while number /= 0 loop
 	remainder := number % 10
 	reversedNumber := reversedNumber * 10 + remainder
 	number := number / 10
