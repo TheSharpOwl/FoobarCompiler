@@ -11,7 +11,7 @@ var result is 0
 
 routine findArmstrongNumber() is
     
-    while originalNumber loop
+    while originalNumber /= 0 loop
         remainder := originalNumber % 10
         result := result + remainder * remainder * remainder
         originalNumber := originalNumber / 10
