@@ -11,6 +11,7 @@ routine go5times() is
     end
     for x in 1..5 loop
     end
+end
 
 type int is integer
 type float is real
