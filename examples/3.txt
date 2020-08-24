@@ -1,7 +1,7 @@
 
 type int is integer
 
-routine calculate(int a, int b, int c) : integer is
+routine calculate(int : a, int : b, int : c) : integer is
 	return ((a + (b + (c - (a * b)))) + b) * (a + (a * 2 + (c - a)) - b)
 end
 
