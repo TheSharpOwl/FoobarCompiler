@@ -1,10 +1,10 @@
-var number is integer
+var number : integer
 
 number := 1828329
 
-var reversedNumber = 0
+var reversedNumber is 0
 
-var remainder is integer
+var remainder : integer
 
 while number /= 0 loop
 	remainder := number % 10
