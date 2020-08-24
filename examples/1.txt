@@ -6,7 +6,7 @@ type int is integer
 type bool is boolean
 
 
-routine power(int : number, int : to_power) : int is
+routine power(number : int, to_power : int) : int is
 	var tmp is 1
 	if to_power < 1 then
 		return 1

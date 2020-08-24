@@ -65,18 +65,18 @@ githubBoard.isActive := true
 
 
 
-routine completeCard(card : completedCard) is 
+routine completeCard(completedCard : card) is 
 	completedCard.isDone := true
 	var index is completedCard.relatedIssueSerialNumber
 	issues[index].isClosed := true
 end
 
 
-routine decreaseDays(card : cardToDecrease, integer : days) is 
+routine decreaseDays(cardToDecrease : card, days : integer) is 
 	cardToDecrease.daysLeft := cardToDecrease.daysLeft - days
 end
 
-routine changePriority(issue : issueToChange, integer : newPriority) is 
+routine changePriority(issueToChange : issue, newPriority : integer) is 
 	issueToChange.priority := newPriority
 end
 
