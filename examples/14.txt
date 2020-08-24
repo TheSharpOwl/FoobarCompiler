@@ -4,7 +4,7 @@
 routine getFactors(x: integer) : array [] boolean is
     var factors is array [x] boolean
 
-    for i in range 1 .. x loop
+    for i in 1 .. x loop
         if x % i = 0 then
            factors[i] := true
 	else
