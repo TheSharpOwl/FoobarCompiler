@@ -26,9 +26,9 @@ math.credits := 0
 
 var physics : subject
 
-math.id := 0
-math.professorId := 0
-math.credits := -30
+physics.id := 13
+physics.professorId := 5
+physics.credits := -30
 
 
 var mathIsAPhysics : boolean is compareSubjects(math, physics)
