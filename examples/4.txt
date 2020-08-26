@@ -80,12 +80,12 @@ routine changePriority(issueToChange : issue, newPriority : integer) is
 	issueToChange.priority := newPriority
 end
 
-changePriority(issues[0], 23)
-changePriority(issues[1], 99)
-changePriority(issues[2], 1000)
+changePriority(issues[1], 23)
+changePriority(issues[2], 99)
+changePriority(issues[3], 1000)
 
-decreaseDays(cards[0])
 decreaseDays(cards[1])
+decreaseDays(cards[2])
 
-completeCard(cards[0])
 completeCard(cards[1])
+completeCard(cards[2])

@@ -1,0 +1,34 @@
+type subject is record
+	var id : integer
+	var professorId : integer
+	var credits : integer
+end
+
+routine compareSubjects(first: subject, second: subject) : boolean is
+     if first.id = second.id then
+         if first.professorId = second.professorId then
+             if first.credits = second.credits then
+                 return true
+             end
+         end
+     end
+
+   return false
+end
+
+
+var math : subject
+
+math.id := 5
+math.professorId := 3
+math.credits := 0
+
+
+var physics : subject
+
+physics.id := 13
+physics.professorId := 5
+physics.credits := -30
+
+
+var mathIsAPhysics : boolean is compareSubjects(math, physics)

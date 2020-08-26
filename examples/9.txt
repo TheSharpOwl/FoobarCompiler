@@ -1,0 +1,29 @@
+var x : integer is 5 + 5
+var y is 5.10 
+
+routine add5(z : integer) : integer is
+    return z + 5
+end
+
+
+routine go5times(z : integer) is
+    for x in reverse 5..1 loop
+    end
+    for x in 1..5 loop
+    end
+end
+
+type int is integer
+type float is real
+
+type student is record
+    var age : int
+    var gpa : float
+    var attendance : array [5 + x] bool
+end
+
+var sasha : student
+sasha.age := 20
+sasha.gpa := 90.4
+sasha.attendance[1] := true
+

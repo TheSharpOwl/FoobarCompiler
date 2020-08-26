@@ -10,32 +10,34 @@ var a is 3
 calculate(1, 2, a)
 
 
-routine f1() : real is
-	return 0.0
+routine f1(x: integer) : real is
+	return x * 1.0
 end
 
-routine f2() : real is
-	return f1()
+routine f2(x: integer) : real is
+	return f1(x)
 end
 
-routing f3() : real is 
-	return f2()
+routine f3(x: integer) : real is 
+	return f2(x)
 end
 
-routing f4() : real is 
-	return f3()
+routine f4(x: integer) : real is 
+	return f3(x)
 end
 
-routing f5() : real is 
-	return f4()
+routine f5(x: integer) : real is 
+	return f4(x)
 end
 
-routing f6() : real is 
-	return f5()
+routine f6(x: integer) : real is 
+	return f5(x)
 end
 
-routing f7() is 
-	f6()
+routine f7(x: integer) is 
+	f6(x)
 end
 
-f7()
+var res is calculate(1, 2, 3)
+
+f7(res)
