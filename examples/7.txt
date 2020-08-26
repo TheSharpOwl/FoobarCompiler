@@ -1,0 +1,29 @@
+var number : integer
+number := 184
+
+var originalNumber : integer
+originalNumber := number
+
+var isArmstrong is false
+
+var remainder : integer
+var result is 0
+
+routine findArmstrongNumber(original : integer, num : integer, rem : integer, res : integer) : boolean is
+    
+    while num /= 0 loop
+        rem := num % 10
+        res := res + rem * rem * rem
+        num := num / 10
+    end
+
+    if res = original then
+        return true
+    end
+    
+    return false
+
+end
+
+
+isArmstrong := findArmstrongNumber(number, originalNumber, remainder, result)
