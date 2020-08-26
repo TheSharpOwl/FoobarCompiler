@@ -9,16 +9,21 @@ var isArmstrong is false
 var remainder : integer
 var result is 0
 
-routine findArmstrongNumber() is
+routine findArmstrongNumber(original : integer, num : integer, rem : integer, res : integer) : boolean is
     
-    while originalNumber /= 0 loop
-        remainder := originalNumber % 10
-        result := result + remainder * remainder * remainder
-        originalNumber := originalNumber / 10
+    while num /= 0 loop
+        rem := num % 10
+        res := res + rem * rem * rem
+        num := num / 10
     end
 
-    if result = number then
-        isArmstrong := true
+    if res = original then
+        return true
     end
+    
+    return false
 
 end
+
+
+isArmstrong := findArmstrongNumber(originalNumber, number, remainder, result)
