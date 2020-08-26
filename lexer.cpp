@@ -3,22 +3,26 @@
 #include <map>
 #include <set>
 #include <cstring>
+#include <sstream>
 
 #define MAX_FILE_CHARS 10000
 
 class Reader {
 public:
-    char file[MAX_FILE_CHARS]{};
+    std::string file;
     int size = 0;
     int ptr = -1;
 
 
     void set_file (std::string filename) {
-        std::ifstream in(filename);
-        std::string contents((std::istreambuf_iterator<char>(in)),
-                             std::istreambuf_iterator<char>());
-        strcpy(file, contents.c_str());
-        size = contents.size();
+        std::ifstream f(filename); //taking file as inputstream
+        if(f) {
+            std::ostringstream ss;
+            ss << f.rdbuf(); // reading data
+            file = ss.str();
+        }
+
+        size = file.size();
     };
 
     char next_character() {
