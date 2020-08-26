@@ -6,7 +6,7 @@ routine add5(z : integer) : integer is
 end
 
 
-routine go5times() is
+routine go5times(z : integer) is
     for x in reverse 5..1 loop
     end
     for x in 1..5 loop
