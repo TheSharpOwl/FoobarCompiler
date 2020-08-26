@@ -1,0 +1,28 @@
+var x : integer
+x := 10.4
+x := false
+
+routine get5th(a : array [] integer) : integer is
+    if a.size < 5 then
+        return -1
+    else
+        return a[5]
+    end
+end
+
+type ninja is record
+    var HP : integer
+    var color : bool
+    var inventory : array [100] integer
+end
+
+routine doDamage(nj : ninja, damage : integer) is
+    nj.HP := nj.HP - damage
+end
+
+routine resetInventory(nj : ninja) is
+    for i in 1 .. 100 loop
+        nj.inventory[i] := 0
+    end
+end
+
