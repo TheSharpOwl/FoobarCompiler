@@ -26,4 +26,4 @@ routine findArmstrongNumber(original : integer, num : integer, rem : integer, re
 end
 
 
-isArmstrong := findArmstrongNumber(originalNumber, number, remainder, result)
+isArmstrong := findArmstrongNumber(number, originalNumber, remainder, result)
