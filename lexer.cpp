@@ -4,8 +4,6 @@
 #include <set>
 #include <cstring>
 
-using namespace std;
-
 #define MAX_FILE_CHARS 10000
 
 class Reader {
@@ -16,9 +14,9 @@ public:
 
 
     void set_file (const char * filename) {
-        ifstream in(filename);
-        string contents((istreambuf_iterator<char>(in)),
-                             istreambuf_iterator<char>());
+        std::ifstream in(filename);
+        std::string contents((std::istreambuf_iterator<char>(in)),
+                             std::istreambuf_iterator<char>());
         strcpy(file, contents.c_str());
         size = contents.size();
     };
@@ -48,11 +46,11 @@ class Lexer {
     int buffer_ptr = 0;
     char c{};
 
-    map<char, const char *> single_chars_to_token = {
+    std::map<char, const char *> single_chars_to_token = {
 
     };
 
-    map< string, const char *> string_to_token = {
+    std::map< std::string, const char *> string_to_token = {
             { ">", "GRT " },
             { ">=", "GRTE " },
             { "<", "LES " },
@@ -97,9 +95,9 @@ class Lexer {
             {"boolean", "BTYPE "}
     };
 
-    set<char> spaces = {' ', '\t'};
-    set<char> single_chars = {'[', ']', '(', ')', '=', '+', '-', '*', '%', ','};
-    set<char> possible_double_chars = {'>', '<', '/', ':'};  /* we can add = to the end */
+    std::set<char> spaces = {' ', '\t'};
+    std::set<char> single_chars = {'[', ']', '(', ')', '=', '+', '-', '*', '%', ','};
+    std::set<char> possible_double_chars = {'>', '<', '/', ':'};  /* we can add = to the end */
 
 
 
@@ -124,7 +122,7 @@ public:
         /* check if special character can be uniquely identified */
         bool is_in = single_chars.find(c) != single_chars.end();
         if (is_in) {
-            string s(1, c);
+            std::string s(1, c);
             const char * return_val = string_to_token.find(s)->second;
             return return_val;
         }
@@ -135,11 +133,11 @@ public:
             char next_c = reader.next_character();
             if (next_c == '=') {
                 char arr[] = {c, next_c, '\0'};
-                string str(arr);
+                std::string str(arr);
                 return string_to_token.find(str)->second;
             } else {
                 reader.move_back_ptr();
-                string s(1, c);
+                std::string s(1, c);
                 return string_to_token.find(s)->second;
             }
         }
@@ -189,7 +187,7 @@ public:
             reader.move_back_ptr();
             buffer[buffer_ptr] = '\0';
 
-            string str(buffer);
+            std::string str(buffer);
             buffer_ptr = 0;
             auto token_struct = string_to_token.find(str);
             if (token_struct != string_to_token.end()) {
