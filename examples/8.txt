@@ -12,6 +12,6 @@ end
 
 for i in 1 .. holodMatrix.size loop
 	for j in 1 .. holodMatrix[i].size loop
-		transposeMatrix[j][i] = holodMatrix[i][j]
+		transposeMatrix[j][i] := holodMatrix[i][j]
 	end
 end
