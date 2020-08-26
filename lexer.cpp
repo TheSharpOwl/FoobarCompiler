@@ -46,13 +46,8 @@ public:
 
 class Lexer {
     Reader reader;
-    char buffer[256]{};
-    int buffer_ptr = 0;
-    char c{};
-
-    std::map<char, const char *> single_chars_to_token = {
-
-    };
+    std::string buffer;
+    char c;
 
     std::map< std::string, const char *> string_to_token = {
             { ">", "GRT " },
@@ -151,7 +146,7 @@ public:
             /* fill digits in the buffer and then convert to number */
             bool is_real = false;
             do {
-                buffer[buffer_ptr++] = c;
+                buffer += c;
                 c = reader.next_character();
                 if (c == '.') {
                     if (is_real) { /* second dot in number like 21.32. */
@@ -168,16 +163,15 @@ public:
             } while (c == '.' || (c >= '0' && c <= '9'));
             reader.move_back_ptr();
 
-            buffer[buffer_ptr] = '\0';
             if (is_real) {
-                double number;
-                sscanf(buffer, "%lf", &number);
-                buffer_ptr = 0;
+                // double number;
+                // number = std::stod( buffer );
+                buffer.clear();
                 return "REAL ";
             } else {
-                int number;
-                sscanf(buffer, "%d", &number);
-                buffer_ptr = 0;
+                // int number;
+                // number = std::stoi( buffer );
+                buffer.clear();
                 return "INTEGER ";
             }
         }
@@ -185,15 +179,13 @@ public:
         /* If first character is the start of the identifier */
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
             do {
-                buffer[buffer_ptr++] = c;
+                buffer += c;
                 c = reader.next_character();
             } while ((c >= 'a' && c <= 'z') || (c >= 'A' &&c <= 'Z') || (c >= '0' && c <= '9') || c == '_');
             reader.move_back_ptr();
-            buffer[buffer_ptr] = '\0';
 
-            std::string str(buffer);
-            buffer_ptr = 0;
-            auto token_struct = string_to_token.find(str);
+            auto token_struct = string_to_token.find(buffer);
+            buffer.clear();
             if (token_struct != string_to_token.end()) {
                 return token_struct->second;
             } else {
