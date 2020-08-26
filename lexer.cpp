@@ -13,7 +13,7 @@ public:
     int ptr = -1;
 
 
-    void set_file (const char * filename) {
+    void set_file (std::string filename) {
         std::ifstream in(filename);
         std::string contents((std::istreambuf_iterator<char>(in)),
                              std::istreambuf_iterator<char>());
@@ -102,7 +102,7 @@ class Lexer {
 
 
 public:
-    void set_file(const char * filename) {
+    void set_file(std::string filename) {
         reader.set_file(filename);
     }
 
@@ -215,7 +215,9 @@ public:
 
 int main() {
     Lexer lexer;
-    lexer.set_file("2.txt");
+    std::string filename;
+    std::cin >> filename;
+    lexer.set_file(filename);
     const char *TOKEN = lexer.get_next_token();
     while (strcmp(TOKEN, "EOF") != 0) {
         printf("%s", TOKEN);
