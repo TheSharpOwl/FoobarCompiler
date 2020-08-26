@@ -19,16 +19,16 @@ end
 
 var math : subject
 
-math.id = 5
-math.professorId = 3
-math.credits = 0
+math.id := 5
+math.professorId := 3
+math.credits := 0
 
 
 var physics : subject
 
-math.id = 0
-math.professorId = 0
-math.credits = -30
+math.id := 0
+math.professorId := 0
+math.credits := -30
 
 
 var mathIsAPhysics : boolean is compareSubjects(math, physics)
