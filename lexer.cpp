@@ -3,24 +3,26 @@
 #include <map>
 #include <set>
 #include <cstring>
-
-using namespace std;
+#include <sstream>
 
 #define MAX_FILE_CHARS 10000
 
 class Reader {
 public:
-    char file[MAX_FILE_CHARS]{};
+    std::string file;
     int size = 0;
     int ptr = -1;
 
 
-    void set_file (const char * filename) {
-        ifstream in(filename);
-        string contents((istreambuf_iterator<char>(in)),
-                             istreambuf_iterator<char>());
-        strcpy(file, contents.c_str());
-        size = contents.size();
+    void set_file (std::string filename) {
+        std::ifstream f(filename); //taking file as inputstream
+        if(f) {
+            std::ostringstream ss;
+            ss << f.rdbuf(); // reading data
+            file = ss.str();
+        }
+
+        size = file.size();
     };
 
     char next_character() {
@@ -44,15 +46,10 @@ public:
 
 class Lexer {
     Reader reader;
-    char buffer[256]{};
-    int buffer_ptr = 0;
-    char c{};
+    std::string buffer;
+    char c;
 
-    map<char, const char *> single_chars_to_token = {
-
-    };
-
-    map< string, const char *> string_to_token = {
+    std::map< std::string, const char *> string_to_token = {
             { ">", "GRT " },
             { ">=", "GRTE " },
             { "<", "LES " },
@@ -97,14 +94,14 @@ class Lexer {
             {"boolean", "BTYPE "}
     };
 
-    set<char> spaces = {' ', '\t'};
-    set<char> single_chars = {'[', ']', '(', ')', '=', '+', '-', '*', '%', ','};
-    set<char> possible_double_chars = {'>', '<', '/', ':'};  /* we can add = to the end */
+    std::set<char> spaces = {' ', '\t'};
+    std::set<char> single_chars = {'[', ']', '(', ')', '=', '+', '-', '*', '%', ','};
+    std::set<char> possible_double_chars = {'>', '<', '/', ':'};  /* we can add = to the end */
 
 
 
 public:
-    void set_file(const char * filename) {
+    void set_file(std::string filename) {
         reader.set_file(filename);
     }
 
@@ -124,7 +121,7 @@ public:
         /* check if special character can be uniquely identified */
         bool is_in = single_chars.find(c) != single_chars.end();
         if (is_in) {
-            string s(1, c);
+            std::string s(1, c);
             const char * return_val = string_to_token.find(s)->second;
             return return_val;
         }
@@ -135,11 +132,11 @@ public:
             char next_c = reader.next_character();
             if (next_c == '=') {
                 char arr[] = {c, next_c, '\0'};
-                string str(arr);
+                std::string str(arr);
                 return string_to_token.find(str)->second;
             } else {
                 reader.move_back_ptr();
-                string s(1, c);
+                std::string s(1, c);
                 return string_to_token.find(s)->second;
             }
         }
@@ -149,7 +146,7 @@ public:
             /* fill digits in the buffer and then convert to number */
             bool is_real = false;
             do {
-                buffer[buffer_ptr++] = c;
+                buffer += c;
                 c = reader.next_character();
                 if (c == '.') {
                     if (is_real) { /* second dot in number like 21.32. */
@@ -166,16 +163,15 @@ public:
             } while (c == '.' || (c >= '0' && c <= '9'));
             reader.move_back_ptr();
 
-            buffer[buffer_ptr] = '\0';
             if (is_real) {
-                double number;
-                sscanf(buffer, "%lf", &number);
-                buffer_ptr = 0;
+                // double number;
+                // number = std::stod( buffer );
+                buffer.clear();
                 return "REAL ";
             } else {
-                int number;
-                sscanf(buffer, "%d", &number);
-                buffer_ptr = 0;
+                // int number;
+                // number = std::stoi( buffer );
+                buffer.clear();
                 return "INTEGER ";
             }
         }
@@ -183,15 +179,13 @@ public:
         /* If first character is the start of the identifier */
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
             do {
-                buffer[buffer_ptr++] = c;
+                buffer += c;
                 c = reader.next_character();
             } while ((c >= 'a' && c <= 'z') || (c >= 'A' &&c <= 'Z') || (c >= '0' && c <= '9') || c == '_');
             reader.move_back_ptr();
-            buffer[buffer_ptr] = '\0';
 
-            string str(buffer);
-            buffer_ptr = 0;
-            auto token_struct = string_to_token.find(str);
+            auto token_struct = string_to_token.find(buffer);
+            buffer.clear();
             if (token_struct != string_to_token.end()) {
                 return token_struct->second;
             } else {
@@ -217,7 +211,9 @@ public:
 
 int main() {
     Lexer lexer;
-    lexer.set_file("2.txt");
+    std::string filename;
+    std::cin >> filename;
+    lexer.set_file(filename);
     const char *TOKEN = lexer.get_next_token();
     while (strcmp(TOKEN, "EOF") != 0) {
         printf("%s", TOKEN);
