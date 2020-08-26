@@ -1,0 +1,91 @@
+type issue is record
+	var serialNumber : integer
+	var priority : integer
+	var isClosed : boolean
+end
+
+type card is record 
+	var serialNumber : integer
+	var relatedIssueSerialNumber : integer
+	var isDone : boolean
+	var daysLeft : integer
+end
+
+type developer is record
+	var name : integer
+	var secondName : integer
+	var isActive : boolean
+end
+
+type taskBoard is record
+	var cards : array [100] card
+	var developers : array [10] developer
+	var isActive : boolean
+end
+
+
+
+var issues : array [3] issue
+
+for i in 1..3 loop
+	issues[i].serialNumber := i
+	issues[i].priority := i * 100
+	issues[i].isClosed := false
+end
+
+var cards : array [2] card
+
+for i in 1..2 loop
+	cards[i].serialNumber := i
+	cards[i].relatedIssueSerialNumber := i
+	cards[i].daysLeft := i * 100
+	cards[i].isClosed := false
+end
+
+
+var developers : array [5] developer
+
+for i in 1..5 loop
+	developers[i].name := i
+	developers[i].SecondName := i * 100
+	developers[i].isActive := true
+end
+
+var githubBoard : taskBoard
+
+for i in 1..cards.size loop
+	githubBoard.cards[i] := cards[i]
+end
+
+for i in 1..developers.size loop
+	githubBoard.developers[i] := developers[i]
+end
+
+githubBoard.isActive := true
+
+
+
+routine completeCard(completedCard : card) is 
+	completedCard.isDone := true
+	var index is completedCard.relatedIssueSerialNumber
+	issues[index].isClosed := true
+end
+
+
+routine decreaseDays(cardToDecrease : card, days : integer) is 
+	cardToDecrease.daysLeft := cardToDecrease.daysLeft - days
+end
+
+routine changePriority(issueToChange : issue, newPriority : integer) is 
+	issueToChange.priority := newPriority
+end
+
+changePriority(issues[1], 23)
+changePriority(issues[2], 99)
+changePriority(issues[3], 1000)
+
+decreaseDays(cards[1])
+decreaseDays(cards[2])
+
+completeCard(cards[1])
+completeCard(cards[2])
