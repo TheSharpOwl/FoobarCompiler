@@ -4,14 +4,14 @@ var transposeMatrix : array [3] array [3] integer
 var counter is 0
 
 for i in 1 .. holodMatrix.size loop
-	for j in range 1 .. holodMatrix[i].size loop
+	for j in 1 .. holodMatrix[i].size loop
 		holodMatrix[i][j] := counter
 		counter := counter + 1
 	end
 end
 
 for i in 1 .. holodMatrix.size loop
-	for j in range 1 .. holodMatrix[i].size loop
+	for j in 1 .. holodMatrix[i].size loop
 		transposeMatrix[j][i] = holodMatrix[i][j]
 	end
 end
