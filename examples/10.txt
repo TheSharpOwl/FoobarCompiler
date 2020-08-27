@@ -1,16 +1,5 @@
 var x : integer is 0
 var y : real is 3.4
-if x then
-    x := 5.3
-else if y > 5 then
-    x := true
-end
-
-if x then
-    x := 5.3
-else
-    y := 10
-end
 
 routine ifFive (x : integer) : boolean is
     return x = 5
@@ -26,9 +15,24 @@ routine isSix (z : integer) : bool is
     end
 end
 
-var z is 5 + x * y / (4 = 4)
 
-var a : array[10] bool
-a[10] := 0
-a[9] := true
-a[8] := 9.8 \= 50
+routine main(inp : integer) is 
+    if x then
+        x := 5.3
+    else if y > 5 then
+        x := true
+    end
+
+    if x then
+        x := 5.3
+    else
+        y := 10
+    end
+
+    var z is 5 + x * y / (4 = 4)
+
+    var a : array[10] bool
+    a[10] := 0
+    a[9] := true
+    a[8] := 9.8 \= 50
+end
