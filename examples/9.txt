@@ -22,8 +22,10 @@ type student is record
     var attendance : array [5 + x] bool
 end
 
-var sasha : student
-sasha.age := 20
-sasha.gpa := 90.4
-sasha.attendance[1] := true
+routine main(inp : integer) is
+	var sasha : student
+	sasha.age := 20
+	sasha.gpa := 90.4
+	sasha.attendance[1] := true
+end
 

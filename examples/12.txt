@@ -1,6 +1,9 @@
 var x : integer
-x := 10.4
-x := false
+
+routine main(inp : integer) is
+    x := 10.4
+    x := false
+end
 
 routine get5th(a : array [] integer) : integer is
     if a.size < 5 then

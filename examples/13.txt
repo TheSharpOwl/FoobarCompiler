@@ -7,4 +7,6 @@ routine convertToMiles(x : integer) : real is
     return x * convertFactor
 end
 
-var miles : real is convertToMiles(x)
+routine main(inp : integer) is
+	var miles : real is convertToMiles(x)
+end

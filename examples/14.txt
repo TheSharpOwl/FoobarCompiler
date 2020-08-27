@@ -9,4 +9,6 @@ routine getNumberOfFactors(x: integer) : integer is
    return k
 end
 
-var factorsNumber : integer is getNumberOfFactors(10)
+routine main(inp : integer) is
+	var factorsNumber : integer is getNumberOfFactors(10)
+end

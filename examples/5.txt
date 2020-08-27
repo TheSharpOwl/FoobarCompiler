@@ -6,8 +6,6 @@ routine checkIfItIsBiggerThen1500(someVariable : integer) is
 	end
 end
 
-checkIfItIsBiggerThen1500(myNewVariable)
-
 
 var myNotArray : array [128] real
 
@@ -17,4 +15,8 @@ routine createArrayWithNumbers(anotherNotArray : array [] real) is
 	end
 end
 
-createArrayWithNumbers(myNotArray)
+routine main(inp : integer) is 
+	checkIfItIsBiggerThen1500(myNewVariable)
+	createArrayWithNumbers(myNotArray)
+end
+

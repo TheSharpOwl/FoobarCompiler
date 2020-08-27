@@ -34,10 +34,11 @@ routine f6(x: integer) : real is
 	return f5(x)
 end
 
-routine f7(x: integer) is 
-	f6(x)
+routine f7(x: integer) : real is 
+	return f6(x)
 end
 
-var res is calculate(1, 2, 3)
-
-f7(res)
+routine main(inp : integer) : real is
+	var res is calculate(1, 2, 3)
+	return	f7(res)
+end
