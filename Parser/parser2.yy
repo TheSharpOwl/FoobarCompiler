@@ -11,33 +11,65 @@ int yylex();
 
 
 /* not sure of those lines yet */
-%token IDENTIFIER NUMBER
-%token ADD 
-%token SUB 
-%token DIV 
-%token MUL 
-%token MOD 
-%token OR 
-%token XOR 
-%token AND 
-%token GRT 
+%token GRT
 %token GRTE
-%token LES 
+%token LES
 %token LESE
-%token EQ 
-%token NEQ 
-%token IS
+%token EQ
+%token NEQ
+%token DIV
+%token LAR
+%token RAR
 %token LBR
 %token RBR
-%token VAR
+%token ADD
+%token SUB
+%token MUL
+%token MOD
+%token COM
 %token SEMIC
-%token TYPE
 %token ASN
-%token INTEGER
-%token REAL
+%token AND
+%token OR
+%token XOR
+%token IF
+%token THEN
+%token ELSE
+%token TRU
+%token FLS
+%token VAR
+%token TKEY
+%token RUT
+%token RTN
+%token IS
+%token IN
+%token REV
+%token FOR
+%token WHL
+%token LOP
+%token END
+%token RCRD
+%token ARR
 
-%type <int> INTEGER
-%type <float> REAL
+/* TODO : not sure of these two exactly */
+%token RNG
+%token DOTN
+
+%token ITYPE
+%token RTYPE
+%token BTYPE
+
+%token REAL
+%token INTEGER
+
+%token IDENTIFIER
+
+%type <int> ITYPE
+%type <float> RTYPE /* might be changed to double */
+%type <bool> BTYPE
+/* TODO find a way to store the array or another alternative method to deal with it */
+/* %type <std::vector> ARRAY */
+
 
 /* should be ADD instead of '+' and so on */
 %left '+'

@@ -74,7 +74,7 @@ exp : exp '+' exp              {
     ;
 %%
 
-// we need to provid the following functions
+// we need to provide the following functions
 int main ()
 {
   memset (vars, 0, sizeof (vars));
