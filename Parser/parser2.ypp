@@ -50,6 +50,7 @@ int yylex();
 %token END
 %token RCRD
 %token ARR
+%token TYPE
 
 /* TODO : not sure of these two exactly */
 %token RNG
@@ -106,7 +107,8 @@ exp:    exp ADD exp {}
 
 int main ()
 {
-    return yyparse();
+    std::cout <<"Hello\n";
+    return 0;
 }
 
 int yylex()

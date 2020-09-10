@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser2.yy"
+#line 1 "parser2.ypp"
 
 #include<iostream>
 #include<string>
@@ -78,7 +78,7 @@ void yyerror(const char *error);
 int yylex();
 
 
-#line 82 "parser2.tab.cc"
+#line 82 "parser2.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -1190,7 +1190,7 @@ yyreduce:
   switch (yyn)
     {
 
-#line 1194 "parser2.tab.cc"
+#line 1194 "parser2.tab.cpp"
 
       default: break;
     }
@@ -1384,7 +1384,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 106 "parser2.yy"
+#line 106 "parser2.ypp"
 
 
 int main ()
