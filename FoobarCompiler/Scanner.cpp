@@ -1,5 +1,4 @@
 #include "Scanner.h"
-#include "Reader.h"
 
 void Scanner::set_file(std::string filename)
 {

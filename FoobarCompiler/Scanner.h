@@ -3,8 +3,7 @@
 #include<map>
 #include<string>
 
-// forward decleration
-class Reader;
+#include "Reader.h"
 
 class Scanner
 {
