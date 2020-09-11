@@ -53,7 +53,7 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             c = reader.next_character();
             if (c == '.') {
                 if (is_real) { /* second dot in number like 21.32. */
-                    return YYerror;
+                    return YYUNDEF;
                 }
                 char next_c = reader.next_character();
                 reader.move_back_ptr();
@@ -112,6 +112,5 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
         }
     }
 
-    printf("%d", c);
-    return YYerror;
+    return YYUNDEF;
 }
