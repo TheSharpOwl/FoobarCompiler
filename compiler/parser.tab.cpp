@@ -1736,13 +1736,12 @@ yyreturn:
 int main()
 {
     scanner.set_file("inp.txt");
-    std::cout<<"I'm in main\n";
     return yyparse();
 }
 
 void yyerror(const char *error)
 {
-    std::cout << error << std::endl;
+    std::cout << "syntax error" << std::endl;
 }
 
 int yylex(YYSTYPE *lvalp)
