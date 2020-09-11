@@ -2,13 +2,13 @@
 Innopolis University Fall20 Complier Construction course project
 
 ## How to run? 
-
-1. Put examples you want to test in examples folder.
+*Make sure that your bison version is 3.2 and higher*
+1. Put example you want to check in compiler folder
+2. ```cd compiler
+make
+./foobar
 ```
-docker build . -t lexer
 
-docker run --rm lexer
-```
 parsed examples will be printed to stdout
 
 ## How to test?
