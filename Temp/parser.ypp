@@ -9,7 +9,9 @@
 #include "Scanner.h"
 #include "AST.h"
 
+// sp<T> = smart pointer of type T
 sp<AST::Program> program = std::make_shared<AST::Program>();
+
 }
 
 
@@ -81,7 +83,9 @@ SimpleDeclaration: VariableDeclaration
 
 VariableDeclaration: VAR IDENTIFIER COL type{
      printf("defined variable \"%s\" with type %s\n", $2, $4);
-
+        sp<AST::Variable> v = std::make_shared<AST::Variable>($2);
+        program->variables.push_back(v);
+        std::cout << "pushed to the vector\n";
       }
 | VAR IDENTIFIER IS Expression
 | VAR IDENTIFIER COL type IS Expression

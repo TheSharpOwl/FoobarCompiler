@@ -36,6 +36,8 @@ namespace AST
 	struct Variable : Node
 	{
 		Type t;
+		std::string name;
+		Variable(const std::string s) : name(s){};
 		// TODO store the value somehow
 	};
 
