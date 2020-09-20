@@ -68,8 +68,18 @@ namespace AST
 		MINUS = '-',
 		MULT = '*',
 		DIV = '/',
+		MOD = '%',
 		EQUAL = '=',
-		NEQUAL = '!'
+		NEQUAL = '!',
+		GRT,
+		GRTE,
+		LES,
+		LESE,
+		EQ,
+		NEQ,
+		AND,
+		OR,
+		XOR
 	};
 
 	class Expression
@@ -99,7 +109,20 @@ namespace AST
 			left = right = nullptr;
 		}
 		Expression(sp<Expression> l, sp<Expression> r, NodeType t) : left(l), right(l), nodeType(t) {};
-		~Expression();
+		// TODO solve the return type in bison and delete these
+		Expression(int l, int r, NodeType t) {};
+		Expression(int l, int r, char t) {};
+		Expression(bool l, bool r, NodeType t) {};
+		Expression(bool l, bool r, string t) {};
+		Expression(double l, double r, string s) {};
+		Expression(bool l, bool r, char t) {};
+		Expression(double l, double r, NodeType t) {};
+		Expression(double l, double r, char* t) {};
+		Expression(double l, double r, char t) {};
+
+		Expression(string t, string s) {};
+		// TODO end
+		~Expression() {};
 	};
 
 	struct IfStatement : Statement
@@ -113,6 +136,8 @@ namespace AST
 	{
 		sp<Expression> condition;
 		sp<Block> body;
+		WhileLoop(sp<Expression> cond, sp<Block> b) : condition(cond), body(b) {};
+		WhileLoop() {};// TODO delete later
 	};
 
 	struct ForLoop : Statement

@@ -2,16 +2,17 @@
 %require "3.2"
 %define api.pure full
 
-
+%{
+    #include "AST.h"
+%}
 %code{
 #include <stdio.h>
 #include <string.h>
 #include "Scanner.h"
-#include "AST.h"
 
 // sp<T> = smart pointer of type T
 sp<AST::Program> program = std::make_shared<AST::Program>();
-
+//std::vector<sp<AST::Block>>();
 }
 
 
@@ -60,7 +61,6 @@ char s[1000];
 
 %type <s> type PrimitiveType IDENTIFIER RecordType ArrayType
 %type <s> Expression Primary INTEGER REAL TRU FLS ModifiablePrimary RoutineCall
-%type <sp<AST::Block>> Body
 %left OR
 %left XOR
 %left AND
@@ -87,8 +87,13 @@ VariableDeclaration: VAR IDENTIFIER COL type{
         program->variables.push_back(v);
         std::cout << "pushed to the vector\n";
       }
-| VAR IDENTIFIER IS Expression
-| VAR IDENTIFIER COL type IS Expression
+| VAR IDENTIFIER IS Expression 
+{sp<AST::Variable> v = std::make_shared<AST::Variable>($2);
+        program->variables.push_back(v);}
+| VAR IDENTIFIER COL type IS Expression{
+    sp<AST::Variable> v = std::make_shared<AST::Variable>($2);
+        program->variables.push_back(v);
+}
 ;
 
 TypeDeclaration: TKEY IDENTIFIER IS type { printf("defined new type %s \n", $2); }
@@ -124,9 +129,9 @@ ArrayType: ARY LAR Expression RAR type {  strcpy($$, "array"); printf("array was
 ;
 
 Body:
-| Body SimpleDeclaration {$$ = std::make_shared<AST::Block>()}
-| Body Statement {$$ = std::make_shared<AST::Block>()}
-| Body EOL {$$ = std::make_shared<AST::Block>()}
+| Body SimpleDeclaration { sp<AST::Block> temp = std::make_shared<AST::Block>();}
+| Body Statement { sp<AST::Block> temp = std::make_shared<AST::Block>();}
+| Body EOL { sp<AST::Block> temp = std::make_shared<AST::Block>();}
 ;
 
 Statement: Assignment
@@ -149,7 +154,7 @@ RoutineCall: IDENTIFIER LBR Arguments RBR { printf("routine %s was called\n", $1
 
 WhileLoop: WHL Expression LOP Body END
 {
-    sp<AST::WhileLoop> whileLoop = std::make_shared<AST::WhileLoop>($2,$4);
+    sp<AST::WhileLoop> whileLoop = std::make_shared<AST::WhileLoop>();
      printf("while loop\n"); 
 }
 ;
@@ -180,25 +185,21 @@ VariableDeclarationBlock:
 | VariableDeclarationBlock EOL
 ;
 
-Expression: Expression ADD Expression {
-     sprintf($$, "[%s+%s]", $1, $3); printf("%s+%s\n", $1, $3);
-     //sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'+')
-     //$$ = 
-     }
-| Expression SUB Expression  { sprintf($$, "[%s-%s]", $1, $3); printf("%s-%s\n", $1, $3); }
-| Expression DIV Expression { sprintf($$, "[%s/%s]", $1, $3); printf("%s/%s\n", $1, $3); }
-| Expression MUL Expression { sprintf($$, "[%s*%s]", $1, $3); printf("%s*%s\n", $1, $3); }
-| Expression MOD Expression { sprintf($$, "[%s%%%s]", $1, $3); printf("%s%%%s\n", $1, $3); }
-| Expression GRT Expression { sprintf($$, "[%s>%s]", $1, $3); printf("%s>%s\n", $1, $3); }
-| Expression GRTE Expression { sprintf($$, "[%s>=%s]", $1, $3); printf("%s>=%s\n", $1, $3); }
-| Expression LES Expression { sprintf($$, "[%s<%s]", $1, $3); printf("%s<%s\n", $1, $3); }
-| Expression LESE Expression { sprintf($$, "[%s<=%s]", $1, $3); printf("%s<=>%s\n", $1, $3); }
-| Expression EQ Expression { sprintf($$, "[%s=%s]", $1, $3); printf("%s=%s\n", $1, $3); }
-| Expression NEQ Expression { sprintf($$, "[%s/=%s]", $1, $3); printf("%s/=%s\n", $1, $3); }
-| Expression AND Expression { sprintf($$, "[%s and %s]", $1, $3); printf("%s and %s\n", $1, $3); }
-| Expression OR Expression { sprintf($$, "[%s or %s]", $1, $3); printf("%s or %s\n", $1, $3); }
-| Expression XOR Expression { sprintf($$, "[%s xor %s]", $1, $3);  printf("%s xor %s\n", $1, $3); }
-| SUB Expression { strcpy($$, $2);  printf("unary minus\n"); }
+Expression: Expression ADD Expression {sprintf($$, "[%s+%s]", $1, $3); printf("%s+%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'+');}
+| Expression SUB Expression  { sprintf($$, "[%s-%s]", $1, $3); printf("%s-%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'-');}
+| Expression DIV Expression { sprintf($$, "[%s/%s]", $1, $3); printf("%s/%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'/');}
+| Expression MUL Expression { sprintf($$, "[%s*%s]", $1, $3); printf("%s*%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'*');}
+| Expression MOD Expression { sprintf($$, "[%s%%%s]", $1, $3); printf("%s%%%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'%');}
+| Expression GRT Expression { sprintf($$, "[%s>%s]", $1, $3); printf("%s>%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'>');}
+| Expression GRTE Expression { sprintf($$, "[%s>=%s]", $1, $3); printf("%s>=%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,">=");}
+| Expression LES Expression { sprintf($$, "[%s<%s]", $1, $3); printf("%s<%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'<');}
+| Expression LESE Expression { sprintf($$, "[%s<=%s]", $1, $3); printf("%s<=>%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,"<=");}
+| Expression EQ Expression { sprintf($$, "[%s=%s]", $1, $3); printf("%s=%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'=');}
+| Expression NEQ Expression { sprintf($$, "[%s/=%s]", $1, $3); printf("%s/=%s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,"/=");}
+| Expression AND Expression { sprintf($$, "[%s and %s]", $1, $3); printf("%s and %s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,"and");}
+| Expression OR Expression { sprintf($$, "[%s or %s]", $1, $3); printf("%s or %s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,"or");}
+| Expression XOR Expression { sprintf($$, "[%s xor %s]", $1, $3);  printf("%s xor %s\n", $1, $3); sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,"xor");}
+| SUB Expression { strcpy($$, $2);  printf("unary minus\n");}
 | Primary {  }
 | LBR Expression RBR { strcpy($$, $2); printf("braces around %s\n", $2); }
 ;
