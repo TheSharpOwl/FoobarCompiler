@@ -45,16 +45,18 @@ namespace AST
 	struct Array : Node
 	{
 		Type t;
+		std::string name;
 		// TODO store the values somehow
 	};
 
-	struct Statment : Node{};
+	struct Statement : Node{};
 
 	struct Block : Node 
 	{
 		int start, end; // number of start and end line
 		vector<sp<Variable>> variables;
-		vector<sp<Statment>> statments;
+		vector<sp<Statement>> Statements;
+		vector<sp<Block>> blocks;
 	};
 
 	enum class NodeType
@@ -100,20 +102,21 @@ namespace AST
 		~Expression();
 	};
 
-	struct IfStatment : Statment
+	struct IfStatement : Statement
 	{
 		sp<Expression> condition;
 		sp<Block> ifBody;
 		sp<Block> elseBody;
 	};
 
-	struct WhileLoop : Statment
+	struct WhileLoop : Statement
 	{
 		sp<Expression> condition;
 		sp<Block> body;
+		WhileLoop(sp<Expression> cond, sp<Block> b) : condition(cond), body(b) {};
 	};
 
-	struct ForLoop : Statment
+	struct ForLoop : Statement
 	{
 		sp<Variable> iterVar;
 		sp<Expression> rangeStart;

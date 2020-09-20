@@ -567,10 +567,10 @@ static const yytype_uint8 yyrline[] =
       91,    94,    97,    98,   101,   102,   105,   108,   109,   110,
      111,   114,   115,   116,   119,   122,   123,   126,   127,   128,
      129,   132,   133,   134,   135,   136,   137,   140,   141,   144,
-     147,   150,   153,   156,   157,   160,   161,   164,   165,   166,
-     169,   170,   171,   172,   173,   174,   175,   176,   177,   178,
-     179,   180,   181,   182,   183,   184,   185,   188,   189,   192,
-     193,   194,   195,   196,   197,   200,   201,   202,   205
+     147,   150,   157,   164,   165,   168,   172,   178,   179,   180,
+     183,   188,   189,   190,   191,   192,   193,   194,   195,   196,
+     197,   198,   199,   200,   201,   202,   203,   206,   207,   210,
+     211,   212,   213,   214,   215,   218,   219,   220,   223
 };
 #endif
 
@@ -1315,7 +1315,7 @@ yyreduce:
     {
   case 4: /* program: program SimpleDeclaration  */
 #line 76 "parser.ypp"
-                            {  }
+                            {}
 #line 1320 "parser.tab.cpp"
     break;
 
@@ -1390,170 +1390,214 @@ yyreduce:
 #line 1391 "parser.tab.cpp"
     break;
 
+  case 28: /* Body: Body SimpleDeclaration  */
+#line 127 "parser.ypp"
+                         {(yyval.sp<AST::Block>) = std::make_shared<AST::Block>()}
+#line 1397 "parser.tab.cpp"
+    break;
+
+  case 29: /* Body: Body Statement  */
+#line 128 "parser.ypp"
+                 {(yyval.sp<AST::Block>) = std::make_shared<AST::Block>()}
+#line 1403 "parser.tab.cpp"
+    break;
+
+  case 30: /* Body: Body EOL  */
+#line 129 "parser.ypp"
+           {(yyval.sp<AST::Block>) = std::make_shared<AST::Block>()}
+#line 1409 "parser.tab.cpp"
+    break;
+
   case 36: /* Statement: Returntatement  */
 #line 137 "parser.ypp"
                  { printf("return\n"); }
-#line 1397 "parser.tab.cpp"
+#line 1415 "parser.tab.cpp"
     break;
 
   case 40: /* RoutineCall: IDENTIFIER LBR Arguments RBR  */
 #line 147 "parser.ypp"
                                           { printf("routine %s was called\n", (yyvsp[-3].s)); }
-#line 1403 "parser.tab.cpp"
-    break;
-
-  case 41: /* WhileLoop: WHL Expression LOP Body END  */
-#line 150 "parser.ypp"
-                                       { printf("while loop\n"); }
-#line 1409 "parser.tab.cpp"
-    break;
-
-  case 42: /* ForLoop: FOR IDENTIFIER Range LOP Body END  */
-#line 153 "parser.ypp"
-                                           { printf("for loop\n"); }
-#line 1415 "parser.tab.cpp"
-    break;
-
-  case 50: /* Expression: Expression ADD Expression  */
-#line 169 "parser.ypp"
-                                      { sprintf((yyval.s), "[%s+%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s+%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
 #line 1421 "parser.tab.cpp"
     break;
 
-  case 51: /* Expression: Expression SUB Expression  */
-#line 170 "parser.ypp"
-                             { sprintf((yyval.s), "[%s-%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s-%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1427 "parser.tab.cpp"
+  case 41: /* WhileLoop: WHL Expression LOP Body END  */
+#line 151 "parser.ypp"
+{
+    sp<AST::WhileLoop> whileLoop = std::make_shared<AST::WhileLoop>((yyvsp[-3].s),(yyvsp[-1].sp<AST::Block>));
+     printf("while loop\n"); 
+}
+#line 1430 "parser.tab.cpp"
     break;
 
-  case 52: /* Expression: Expression DIV Expression  */
-#line 171 "parser.ypp"
-                            { sprintf((yyval.s), "[%s/%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s/%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1433 "parser.tab.cpp"
-    break;
-
-  case 53: /* Expression: Expression MUL Expression  */
-#line 172 "parser.ypp"
-                            { sprintf((yyval.s), "[%s*%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s*%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
+  case 42: /* ForLoop: FOR IDENTIFIER Range LOP Body END  */
+#line 158 "parser.ypp"
+{
+    sp<AST::ForLoop> forLoop = std::make_shared<AST::ForLoop>();
+    printf("for loop\n"); 
+}
 #line 1439 "parser.tab.cpp"
     break;
 
-  case 54: /* Expression: Expression MOD Expression  */
+  case 45: /* IfStatement: IF Expression THEN Body END  */
+#line 169 "parser.ypp"
+{
+    sp<AST::IfStatement> ifStatement = std::make_shared<AST::IfStatement>();
+}
+#line 1447 "parser.tab.cpp"
+    break;
+
+  case 46: /* IfStatement: IF Expression THEN Body EOL ELSE Body END  */
 #line 173 "parser.ypp"
+{
+    sp<AST::IfStatement> ifStatement = std::make_shared<AST::IfStatement>();
+}
+#line 1455 "parser.tab.cpp"
+    break;
+
+  case 50: /* Expression: Expression ADD Expression  */
+#line 183 "parser.ypp"
+                                      {
+     sprintf((yyval.s), "[%s+%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s+%s\n", (yyvsp[-2].s), (yyvsp[0].s));
+     //sp<AST::Expression> temp = std::make_shared<AST::Expression>($1,$3,'+')
+     //$$ = 
+     }
+#line 1465 "parser.tab.cpp"
+    break;
+
+  case 51: /* Expression: Expression SUB Expression  */
+#line 188 "parser.ypp"
+                             { sprintf((yyval.s), "[%s-%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s-%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
+#line 1471 "parser.tab.cpp"
+    break;
+
+  case 52: /* Expression: Expression DIV Expression  */
+#line 189 "parser.ypp"
+                            { sprintf((yyval.s), "[%s/%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s/%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
+#line 1477 "parser.tab.cpp"
+    break;
+
+  case 53: /* Expression: Expression MUL Expression  */
+#line 190 "parser.ypp"
+                            { sprintf((yyval.s), "[%s*%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s*%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
+#line 1483 "parser.tab.cpp"
+    break;
+
+  case 54: /* Expression: Expression MOD Expression  */
+#line 191 "parser.ypp"
                             { sprintf((yyval.s), "[%s%%%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s%%%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1445 "parser.tab.cpp"
+#line 1489 "parser.tab.cpp"
     break;
 
   case 55: /* Expression: Expression GRT Expression  */
-#line 174 "parser.ypp"
+#line 192 "parser.ypp"
                             { sprintf((yyval.s), "[%s>%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s>%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1451 "parser.tab.cpp"
+#line 1495 "parser.tab.cpp"
     break;
 
   case 56: /* Expression: Expression GRTE Expression  */
-#line 175 "parser.ypp"
+#line 193 "parser.ypp"
                              { sprintf((yyval.s), "[%s>=%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s>=%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1457 "parser.tab.cpp"
+#line 1501 "parser.tab.cpp"
     break;
 
   case 57: /* Expression: Expression LES Expression  */
-#line 176 "parser.ypp"
+#line 194 "parser.ypp"
                             { sprintf((yyval.s), "[%s<%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s<%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1463 "parser.tab.cpp"
+#line 1507 "parser.tab.cpp"
     break;
 
   case 58: /* Expression: Expression LESE Expression  */
-#line 177 "parser.ypp"
+#line 195 "parser.ypp"
                              { sprintf((yyval.s), "[%s<=%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s<=>%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1469 "parser.tab.cpp"
+#line 1513 "parser.tab.cpp"
     break;
 
   case 59: /* Expression: Expression EQ Expression  */
-#line 178 "parser.ypp"
+#line 196 "parser.ypp"
                            { sprintf((yyval.s), "[%s=%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s=%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1475 "parser.tab.cpp"
+#line 1519 "parser.tab.cpp"
     break;
 
   case 60: /* Expression: Expression NEQ Expression  */
-#line 179 "parser.ypp"
+#line 197 "parser.ypp"
                             { sprintf((yyval.s), "[%s/=%s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s/=%s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1481 "parser.tab.cpp"
+#line 1525 "parser.tab.cpp"
     break;
 
   case 61: /* Expression: Expression AND Expression  */
-#line 180 "parser.ypp"
+#line 198 "parser.ypp"
                             { sprintf((yyval.s), "[%s and %s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s and %s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1487 "parser.tab.cpp"
+#line 1531 "parser.tab.cpp"
     break;
 
   case 62: /* Expression: Expression OR Expression  */
-#line 181 "parser.ypp"
+#line 199 "parser.ypp"
                            { sprintf((yyval.s), "[%s or %s]", (yyvsp[-2].s), (yyvsp[0].s)); printf("%s or %s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1493 "parser.tab.cpp"
+#line 1537 "parser.tab.cpp"
     break;
 
   case 63: /* Expression: Expression XOR Expression  */
-#line 182 "parser.ypp"
+#line 200 "parser.ypp"
                             { sprintf((yyval.s), "[%s xor %s]", (yyvsp[-2].s), (yyvsp[0].s));  printf("%s xor %s\n", (yyvsp[-2].s), (yyvsp[0].s)); }
-#line 1499 "parser.tab.cpp"
+#line 1543 "parser.tab.cpp"
     break;
 
   case 64: /* Expression: SUB Expression  */
-#line 183 "parser.ypp"
+#line 201 "parser.ypp"
                  { strcpy((yyval.s), (yyvsp[0].s));  printf("unary minus\n"); }
-#line 1505 "parser.tab.cpp"
+#line 1549 "parser.tab.cpp"
     break;
 
   case 65: /* Expression: Primary  */
-#line 184 "parser.ypp"
+#line 202 "parser.ypp"
           {  }
-#line 1511 "parser.tab.cpp"
+#line 1555 "parser.tab.cpp"
     break;
 
   case 66: /* Expression: LBR Expression RBR  */
-#line 185 "parser.ypp"
+#line 203 "parser.ypp"
                      { strcpy((yyval.s), (yyvsp[-1].s)); printf("braces around %s\n", (yyvsp[-1].s)); }
-#line 1517 "parser.tab.cpp"
+#line 1561 "parser.tab.cpp"
     break;
 
   case 69: /* Primary: INTEGER  */
-#line 192 "parser.ypp"
+#line 210 "parser.ypp"
                  { strcpy((yyval.s), "integer"); }
-#line 1523 "parser.tab.cpp"
+#line 1567 "parser.tab.cpp"
     break;
 
   case 70: /* Primary: REAL  */
-#line 193 "parser.ypp"
+#line 211 "parser.ypp"
        { strcpy((yyval.s), "real"); }
-#line 1529 "parser.tab.cpp"
+#line 1573 "parser.tab.cpp"
     break;
 
   case 71: /* Primary: TRU  */
-#line 194 "parser.ypp"
+#line 212 "parser.ypp"
       { strcpy((yyval.s), "true"); }
-#line 1535 "parser.tab.cpp"
+#line 1579 "parser.tab.cpp"
     break;
 
   case 72: /* Primary: FLS  */
-#line 195 "parser.ypp"
+#line 213 "parser.ypp"
       { strcpy((yyval.s), "false"); }
-#line 1541 "parser.tab.cpp"
+#line 1585 "parser.tab.cpp"
     break;
 
   case 73: /* Primary: ModifiablePrimary  */
-#line 196 "parser.ypp"
+#line 214 "parser.ypp"
                     { strcpy((yyval.s), "modifiablePrimary"); }
-#line 1547 "parser.tab.cpp"
+#line 1591 "parser.tab.cpp"
     break;
 
   case 74: /* Primary: RoutineCall  */
-#line 197 "parser.ypp"
+#line 215 "parser.ypp"
               { strcpy((yyval.s), "routineCall"); }
-#line 1553 "parser.tab.cpp"
+#line 1597 "parser.tab.cpp"
     break;
 
 
-#line 1557 "parser.tab.cpp"
+#line 1601 "parser.tab.cpp"
 
       default: break;
     }
@@ -1747,7 +1791,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 207 "parser.ypp"
+#line 225 "parser.ypp"
 
 int main()
 {
