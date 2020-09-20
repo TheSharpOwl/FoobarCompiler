@@ -3,10 +3,13 @@
 #include <iostream>
 
 #include "Scanner.h"
+#include "AST.h"
 class Reader;
 
 int main()
 {
+	// TODO delete the next line
+	AST::Program* t = new AST::Program;
 	Scanner lexer;
 	std::string filename;
 	std::cin >> filename;
