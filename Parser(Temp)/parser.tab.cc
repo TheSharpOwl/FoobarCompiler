@@ -1250,7 +1250,8 @@ yyreturn:
 int main()
 {
     std::cout<<"I'm in main\n";
-    return yyparse();
+    //return yyparse();
+    return 0;
 }
 
 void yyerror(const char *error)
