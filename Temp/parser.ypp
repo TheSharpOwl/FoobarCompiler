@@ -30,6 +30,7 @@ sp<AST::Program> program = std::make_shared<AST::Program>();
 int n;
 double d;
 char s[1000];
+sp<AST>
 }
 
 
