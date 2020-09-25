@@ -5,169 +5,154 @@
 #include <string>
 #include<variant>
 
-template <typename T> using sp = std::shared_ptr<T>;
+// TODO read about Visitor Pattern and try to apply it here
 
 // forward declerations 
+struct Node;
+struct Block;
+struct Routine;
+struct Variable;
+struct Statement;
+struct ReturnStatement;
+struct WhileLoop;
+struct IfStatement;
+struct ForLoop;
+struct Decleration;
+struct Assignment;
+struct Expression;
+struct Type;
+struct Ident;
 
-namespace AST
+
+namespace ast
 {
+
 	using namespace std;
+	template <typename T> using sp = shared_ptr<T>;
+	template <typename T> using vsp = vector<shared_ptr<T>>;
 
 	struct Node
 	{
 		string name;
+		int start, end;
 	};
-
-	struct Type : Node{};
-
-	template<typename T>
-	struct Record : Type 
+	struct Program : Node
 	{
-		// the types and the name of each corresponding field;
-		vector<sp<Type>> fields;
-		vector<string> names;
+		vsp<Variable> variables;
+		vsp<Statement> statemets;
+		vsp<Routine> routines;
 	};
-	/*
-	* Notes :
-	* 1. value can be anything here, vector of primitive types for example in case of a record and so on
-	* 2. Type t also can be a record since record inherits from Type
-	* 
-	*/
+	struct Block : Node
+	{
+		vsp<Variable> variables;
+		vsp<Statement> statemets;
+	};
+	struct Routine : Node
+	{
+		sp<Block> body; // variables and other things go inside the body
+		vsp <Variable> parameters;
+		sp<Type> returnType;
+		vsp<ReturnStatement> returnStatements;
+
+		//TODO function to store the returnStatements inside the vector
+		//TODO function to check valid return statements
+	};
 	struct Variable : Node
 	{
-		Type t;
-		std::string name;
-		Variable(const std::string s) : name(s) {};
-		// TODO store the value somehow
+		sp<Type> type;
 	};
 
-	template<typename T>
-	struct Array : Node
+	struct Statement : Node
 	{
-		Type t;
-		std::string name;
-		// TODO store the values somehow
+
 	};
-
-	struct Statement : Node{};
-
-	struct Block : Node 
+	struct ReturnStatement : Statement
 	{
-		int start, end; // number of start and end line
-		vector<sp<Variable>> variables;
-		vector<sp<Statement>> Statements;
-		vector<sp<Block>> blocks;
+		sp<Expression> returned;
 	};
-
-	enum class NodeType
-	{
-		BOOLEAN = 'B',
-		INTEGER = 'I',
-		REAL = 'R',
-		PLUS = '+',
-		MINUS = '-',
-		MULT = '*',
-		DIV = '/',
-		MOD = '%',
-		EQUAL = '=',
-		NEQUAL = '!',
-		GRT,
-		GRTE,
-		LES,
-		LESE,
-		EQ,
-		NEQ,
-		AND,
-		OR,
-		XOR
-	};
-
-	class Expression
-	{
-	public:
-		NodeType nodeType;
-
-		// TODO find a solution for nodes which have - 
-		//https://en.cppreference.com/w/cpp/utility/variant (C++ 's alternative to union)
-		variant<bool, double, long long int> bValue, rValue, iValue;
-
-		sp<Expression> left, right;
-		Expression() = delete;
-		Expression(bool value)
-		{
-			bValue = value;
-			left = right = nullptr;
-		}
-		Expression(long long int value)
-		{
-			iValue = value;
-			left = right = nullptr;
-		}
-		Expression(double value)
-		{
-			rValue = value;
-			left = right = nullptr;
-		}
-		Expression(sp<Expression> l, sp<Expression> r, NodeType t) : left(l), right(l), nodeType(t) {};
-		// TODO solve the return type in bison and delete these
-		Expression(int l, int r, NodeType t) {};
-		Expression(int l, int r, char t) {};
-		Expression(bool l, bool r, NodeType t) {};
-		Expression(bool l, bool r, string t) {};
-		Expression(double l, double r, string s) {};
-		Expression(bool l, bool r, char t) {};
-		Expression(double l, double r, NodeType t) {};
-		Expression(double l, double r, char* t) {};
-		Expression(double l, double r, char t) {};
-
-		Expression(string t, string s) {};
-		// TODO end
-		~Expression() {};
-	};
-
-	struct IfStatement : Statement
-	{
-		sp<Expression> condition;
-		sp<Block> ifBody;
-		sp<Block> elseBody;
-	};
-
 	struct WhileLoop : Statement
 	{
 		sp<Expression> condition;
 		sp<Block> body;
-		WhileLoop(sp<Expression> cond, sp<Block> b) : condition(cond), body(b) {};
-		WhileLoop() {};// TODO delete later
-	};
 
+	};
+	struct IfStatement : Statement
+	{
+		sp<Expression> condition;
+		sp<Block> body;
+		sp<Block> elseBody;
+	};
 	struct ForLoop : Statement
 	{
-		sp<Variable> iterVar;
+		sp<Block> body;
 		sp<Expression> rangeStart;
 		sp<Expression> rangeEnd;
-		bool reversed = false; // by default it is not unless the coder says so
-		sp<Block> body;
-	};
-	struct Parameter : Node
-	{
-		string name;
-		Type type;
-	};
-	struct Routine : Node
-	{
-		sp<Block> body;
-		vector<sp<Parameter>> parameters;
-		sp<Type> returnType;
+		sp<Variable> loopVar;
+		bool reversed = false; // by default
 	};
 
-	struct Program : Node
+	struct Decleration : Statement
 	{
-		vector<sp<Routine>> routines;
-		vector<sp<Variable>> variables;
-		vector<sp<Type>> types;
+		sp<Type> type;
+		// TODO function to create a variable
 	};
 
-	
-	
+	struct Assignment : Statement
+	{
+		sp<Expression> lValue;
+		sp<Ident> rValue;
+		// TODO function to check if lValue is a valid Ident
+		// TODO function to check if the rValue is valid (use the expression type determiner function)
+	};
+	struct Ident : Node
+	{
+
+	};
+	struct Expression : Node
+	{
+		// if l = r = nullptr this means we can't go deeper in the tree
+
+		// TODO might change to enum for symbols
+		variant<string, Ident> symbol, ident;
+		sp<Expression> l;
+		sp<Expression> r;
+		// TODO impelement function which returns Type of the expression
+		// TODO store the expression from bison (need to solve the union bison issue)
+		// TODO figure out other things to impelement as funcitons here
+	};
+
+	struct Type : Node
+	{
+		
+	};
+	struct Integer : Type
+	{
+		long long int value;
+	};
+	struct Real : Type
+	{
+		double value;
+	};
+	struct Bool : Type
+	{
+		bool value;
+	};
+	struct Record : Type
+	{
+		vsp<Type> fields;
+	};
+
+	struct Alias : Type
+	{
+		sp<Type> type; // the original one and "name" is already inherited
+	};
+
+	struct Array : Type
+	{
+		int size = 0;
+		sp<Type> type;
+		// TODO figure out how to store the values
+	};
 }
 
+// TODO : make sure type aliases can only be defined in the outside program and handle it.
