@@ -1,0 +1,70 @@
+%require "3.2"
+%define api.pure full
+
+
+%code{
+#include <stdio.h>
+#include <string.h>
+#include "Scanner.h"
+#include<iostream>
+}
+
+
+
+%code{
+    int yylex(YYSTYPE *lvalp);
+    #include<iostream>
+    #include<string>
+    Scanner scanner;
+    void yyerror(const char *error);
+}
+
+
+%union {
+int n;
+double d;
+char s[1000];
+}
+
+%token VAR COL ITYPE
+%token IDENTIFIER
+%token INTEGER
+%token EOL
+
+%type <s> type PrimitiveType IDENTIFIER
+%type <s> INTEGER    
+
+%%
+program:
+| program EOL
+| program SimpleDeclaration {  }
+;
+
+SimpleDeclaration: VariableDeclaration
+;
+
+VariableDeclaration: VAR IDENTIFIER COL type {std::cout<<"defined variable " << $2 << " with type " << $4 << std::endl; }
+
+type: IDENTIFIER
+| PrimitiveType
+;
+
+PrimitiveType: ITYPE { strcpy($$, "int"); }
+;
+
+%%
+int main()
+{
+    scanner.set_file("inp.txt");
+    return yyparse();
+}
+
+void yyerror(const char *error)
+{
+    std::cout << "syntax error" << std::endl;
+}
+
+int yylex(YYSTYPE *lvalp)
+{
+	return scanner.get_next_token(lvalp);
+}

@@ -71,7 +71,7 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             double number = std::stod( buffer );
             lvalp->d = number;
             buffer.clear();
-            return REAL;
+            return INTEGER;///REAL
         }
         else {
             int number = std::stoi( buffer );
@@ -95,7 +95,7 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             return token_struct->second;
         }
         else {
-            lvalp->s = new std::string(buffer);
+            strcpy(lvalp->s, buffer.c_str());
             buffer.clear();
             return IDENTIFIER;
         }
@@ -104,11 +104,11 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
     if (c == '.') {
         char next_c = reader.next_character();
         if (next_c == '.') {
-            return RNG;
+            return INTEGER;//RNG
         }
         else {
             reader.move_back_ptr();
-            return DOTN;
+            return INTEGER;//DOTIN
         }
     }
 

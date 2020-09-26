@@ -80,7 +80,7 @@ SimpleDeclaration: VariableDeclaration
 | TypeDeclaration
 ;
 
-VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << *($2) << "with type" << *($4); }
+VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "hmmm\n"; std::cout << "defined variable " << ($2) << "with type" << ($4); }
 | VAR IDENTIFIER IS Expression
 | VAR IDENTIFIER COL type IS Expression
 ;
@@ -138,7 +138,7 @@ Returntatement: RTN EOL
 Assignment: ModifiablePrimary ASN Expression
 ;
 
-RoutineCall: IDENTIFIER LBR Arguments RBR { std::cout << "routine " << *($1) << " was called\n"; delete $1; }
+RoutineCall: IDENTIFIER LBR Arguments RBR { std::cout << "routine " << *($1) << " was called\n"; }
 ;
 
 WhileLoop: WHL Expression LOP Body END { std::cout << "while loop\n"; }
@@ -160,23 +160,23 @@ VariableDeclarationBlock:
 | VariableDeclarationBlock EOL
 ;
 
-Expression: Expression ADD Expression { *$$ = *($1) + "+" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression SUB Expression  {          *$$ = *($1) + "-" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression DIV Expression {           *$$ = *($1) + "/" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression MUL Expression {           *$$ = *($1) + "*" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression MOD Expression {           *$$ = *($1) + "%" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression GRT Expression {           *$$ = *($1) + ">" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression GRTE Expression {          *$$ = *($1) + ">=" + *($3); delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression LES Expression {           *$$ = *($1) + "<" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression LESE Expression {          *$$ = *($1) + "<=" + *($3); delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression EQ Expression {            *$$ = *($1) + "=" + *($3);  delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression NEQ Expression {           *$$ = *($1) + "/=" + *($3); delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression AND Expression {           *$$ = *($1) + "and" + *($3);delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression OR Expression {            *$$ = *($1) + "or" + *($3); delete $1; delete $3; std::cout << *($$) << "\n";}
-| Expression XOR Expression {           *$$ = *($1) + "xor" + *($3);delete $1; delete $3; std::cout << *($$) << "\n";}
-| SUB Expression { *($$) = *($2);  delete $2;                                std::cout << "unary minus\n"; }
+Expression: Expression ADD Expression { *$$ = *($1) + "+" + *($3);  std::cout << *($$) << "\n";}
+| Expression SUB Expression  {          *$$ = *($1) + "-" + *($3);  std::cout << *($$) << "\n";}
+| Expression DIV Expression {           *$$ = *($1) + "/" + *($3);  std::cout << *($$) << "\n";}
+| Expression MUL Expression {           *$$ = *($1) + "*" + *($3);  std::cout << *($$) << "\n";}
+| Expression MOD Expression {           *$$ = *($1) + "%" + *($3);  std::cout << *($$) << "\n";}
+| Expression GRT Expression {           *$$ = *($1) + ">" + *($3);  std::cout << *($$) << "\n";}
+| Expression GRTE Expression {          *$$ = *($1) + ">=" + *($3); std::cout << *($$) << "\n";}
+| Expression LES Expression {           *$$ = *($1) + "<" + *($3);  std::cout << *($$) << "\n";}
+| Expression LESE Expression {          *$$ = *($1) + "<=" + *($3); std::cout << *($$) << "\n";}
+| Expression EQ Expression {            *$$ = *($1) + "=" + *($3);  std::cout << *($$) << "\n";}
+| Expression NEQ Expression {           *$$ = *($1) + "/=" + *($3); std::cout << *($$) << "\n";}
+| Expression AND Expression {           *$$ = *($1) + "and" + *($3);std::cout << *($$) << "\n";}
+| Expression OR Expression {            *$$ = *($1) + "or" + *($3); std::cout << *($$) << "\n";}
+| Expression XOR Expression {           *$$ = *($1) + "xor" + *($3);std::cout << *($$) << "\n";}
+| SUB Expression { *($$) = *($2);                                 std::cout << "unary minus\n"; }
 | Primary {  }
-| LBR Expression RBR { *($$) = *($2); delete $2; std::cout  << "braces around" << *($$) << "\n"; }
+| LBR Expression RBR { *($$) = *($2); std::cout  << "braces around" << *($$) << "\n"; }
 ;
 
 Arguments: Expression
@@ -202,6 +202,7 @@ ModifiablePrimary: IDENTIFIER VariableAcess
 int main()
 {
     scanner.set_file("inp.txt");
+    //std::cout << "let's go\n";
     return yyparse();
 }
 
