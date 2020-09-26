@@ -95,7 +95,8 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             return token_struct->second;
         }
         else {
-            strcpy(lvalp->s, buffer.c_str());
+            lvalp->s = new std::string(buffer);
+            //strcpy(lvalp->s, buffer.c_str());
             buffer.clear();
             return IDENTIFIER;
         }

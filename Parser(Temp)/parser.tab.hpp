@@ -110,11 +110,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 24 "parser.ypp"
+#line 27 "parser.ypp"
 
 int n;
 double d;
-char s[1025];
+std::string* s;
 
 #line 120 "parser.tab.hpp"
 
