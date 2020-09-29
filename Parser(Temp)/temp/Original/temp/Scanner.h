@@ -1,10 +1,11 @@
 #pragma once
+#include "parser.tab.hpp"
 #include<set>
 #include<map>
 #include<string>
-
 #include "Reader.h"
-#include "parser.tab.hpp"
+
+class parser;
 
 class Scanner
 {
@@ -18,12 +19,12 @@ class Scanner
 
     std::map< std::string, int> string_to_token =
             {
-                    {":", COL },
-                    {"integer", ITYPE },
-                    {"var", VAR }
+                    {":", parser::token::COL },
+                    {"integer", parser::token::ITYPE },
+                    {"var", parser::token::VAR }
             };
 
 public:
     void set_file(std::string filename);
-    int get_next_token(YYSTYPE *lvalp);
+    int get_next_token(parser::semantic_type* yylval);
 };

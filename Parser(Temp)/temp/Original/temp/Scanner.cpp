@@ -7,7 +7,7 @@ void Scanner::set_file(std::string filename)
     reader.set_file(filename);
 }
 
-int Scanner::get_next_token(YYSTYPE *lvalp)
+int Scanner::get_next_token(parser::semantic_type* yylval)
 {
     /* skip leading spaces */
     c = reader.next_character();
@@ -15,10 +15,10 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
         c = reader.next_character();
     }
     if (c == '\n') {
-        return EOL;
+        return parser::EOL;
     }
     if (c == EOF) {
-        return YYEOF;
+        return parser::YYEOF;
     }
 
     /* check if special character can be uniquely identified */
@@ -53,7 +53,7 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             c = reader.next_character();
             if (c == '.') {
                 if (is_real) { /* second dot in number like 21.32. */
-                    return YYUNDEF;
+                    return parser::YYUNDEF;
                 }
                 char next_c = reader.next_character();
                 reader.move_back_ptr();
@@ -68,16 +68,17 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
         reader.move_back_ptr();
 
         if (is_real) {
-            double number = std::stod( buffer );
-            lvalp->d = number;
+            //edited to int instead of double
+            int number = std::stod( buffer );
+            yylval->emplace<int>() = number;
             buffer.clear();
-            return INTEGER;///REAL
+            return parser::token::INTEGER;///REAL
         }
         else {
             int number = std::stoi( buffer );
-            lvalp->n = number;
+            yylval->emplace<int>() = number;
             buffer.clear();
-            return INTEGER;
+            return parser::token::INTEGER;
         }
     }
 
@@ -95,22 +96,22 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             return token_struct->second;
         }
         else {
-            strcpy(lvalp->s, buffer.c_str());
+            yylval->emplace<std::string>() = buffer;
             buffer.clear();
-            return IDENTIFIER;
+            return parser::token::IDENTIFIER;
         }
     }
 
     if (c == '.') {
         char next_c = reader.next_character();
         if (next_c == '.') {
-            return INTEGER;//RNG
+            return parser::token::INTEGER;//RNG
         }
         else {
             reader.move_back_ptr();
-            return INTEGER;//DOTIN
+            return parser::token::INTEGER;//DOTIN
         }
     }
 
-    return YYUNDEF;
+    return parser::token::YYUNDEF;
 }

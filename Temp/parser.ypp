@@ -1,7 +1,7 @@
 
 %require "3.2"
 %define api.pure full
-
+%language "c++"
 %{
     #include "AST.h"
 %}

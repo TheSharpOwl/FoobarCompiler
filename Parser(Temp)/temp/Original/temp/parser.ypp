@@ -1,6 +1,15 @@
 %require "3.2"
-%define api.pure full
-
+%language "c++"
+%define api.value.type variant
+%define api.token.constructor
+%define parse.assert
+%code requires
+{
+    #include <iostream>
+    #include <string>
+    #include <vector>
+    #include <variant>
+}
 
 %code{
 #include <stdio.h>
@@ -12,18 +21,11 @@
 
 
 %code{
-    int yylex(YYSTYPE *lvalp);
+    static parser::symbol_type yylex(parser::semantic_type* yylval);
     #include<iostream>
     #include<string>
     Scanner scanner;
     void yyerror(const char *error);
-}
-
-
-%union {
-int n;
-double d;
-char s[1000];
 }
 
 %token VAR COL ITYPE
@@ -31,8 +33,8 @@ char s[1000];
 %token INTEGER
 %token EOL
 
-%type <s> type PrimitiveType IDENTIFIER
-%type <s> INTEGER    
+%type <std::string> type PrimitiveType IDENTIFIER
+%type <int> INTEGER    
 
 %%
 program:
@@ -49,22 +51,29 @@ type: IDENTIFIER
 | PrimitiveType
 ;
 
-PrimitiveType: ITYPE { strcpy($$, "int"); }
+PrimitiveType: ITYPE { $$ = "int"; }
 ;
 
 %%
+
+namespace yy
+{
+    void yy::parser::yyerror(const std::string& m)
+    {
+        std::cout << "syntax error" << std::endl;
+    }
+
+    static parser::symbol_type yylex(parser::semantic_type* yylval)
+    {
+    	return scanner.get_next_token(yylval);
+    }
+}
+
+
 int main()
 {
+    yy::parser p;
     scanner.set_file("inp.txt");
-    return yyparse();
-}
-
-void yyerror(const char *error)
-{
-    std::cout << "syntax error" << std::endl;
-}
-
-int yylex(YYSTYPE *lvalp)
-{
-	return scanner.get_next_token(lvalp);
+    p.set_debug_level (!!getenv ("YYDEBUG"));
+    return p.parse ();
 }

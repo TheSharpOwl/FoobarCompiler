@@ -23,11 +23,19 @@ struct Expression;
 struct Type;
 struct Ident;
 
+template<typename T>
+int sum(T x, T y)
+{
+	return x + y;
+}
+
+z = sum<int>(5, 7);
 
 namespace ast
 {
 
 	using namespace std;
+
 	template <typename T> using sp = shared_ptr<T>;
 	template <typename T> using vsp = vector<shared_ptr<T>>;
 
