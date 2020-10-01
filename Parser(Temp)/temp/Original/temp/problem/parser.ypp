@@ -14,18 +14,16 @@
 %code{
 #include <stdio.h>
 #include <string.h>
-#include "Scanner.h"
 #include<iostream>
 }
 
 
 
 %code{
-    static parser::symbol_type yylex(parser::semantic_type* yylval);
+    yy::parser::symbol_type yy::parser::yylex();
     #include<iostream>
     #include<string>
-    Scanner scanner;
-    void yyerror(const char *error);
+    //void parser::yyerror(const char *error);
 }
 
 %token VAR COL ITYPE
@@ -56,24 +54,21 @@ PrimitiveType: ITYPE { $$ = "int"; }
 
 %%
 
-namespace yy
-{
-    void yy::parser::yyerror(const std::string& m)
-    {
-        std::cout << "syntax error" << std::endl;
-    }
 
-    static parser::symbol_type yylex(parser::semantic_type* yylval)
-    {
-    	return scanner.get_next_token(yylval);
-    }
+// void parser::yyerror(const std::string& m)
+// {
+//     std::cout << "syntax error" << std::endl;
+// }
+
+yy::parser::symbol_type yy::parser::yylex()
+{
+	return 0;
 }
 
 
 int main()
 {
-    yy::parser p;
-    scanner.set_file("inp.txt");
-    p.set_debug_level (!!getenv ("YYDEBUG"));
-    return p.parse ();
+    //yy::parser p;
+    // for now return zero
+    return 0;
 }
