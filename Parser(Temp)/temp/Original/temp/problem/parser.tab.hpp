@@ -45,14 +45,17 @@
 #ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 // "%code requires" blocks.
-#line 7 "parser.ypp"
+#line 8 "parser.ypp"
 
+    //#include "parser.tab.hpp"
     #include <iostream>
     #include <string>
-    #include <vector>
-    #include <variant>
+    namespace yy
+    {
+        class parser;
+    }
 
-#line 56 "parser.tab.hpp"
+#line 59 "parser.tab.hpp"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -186,7 +189,7 @@
 #endif
 
 namespace yy {
-#line 190 "parser.tab.hpp"
+#line 193 "parser.tab.hpp"
 
 
 
@@ -1400,7 +1403,7 @@ switch (yykind)
   }
 
 } // yy
-#line 1404 "parser.tab.hpp"
+#line 1407 "parser.tab.hpp"
 
 
 

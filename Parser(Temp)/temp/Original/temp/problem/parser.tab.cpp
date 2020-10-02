@@ -42,19 +42,15 @@
 
 
 // Unqualified %code blocks.
-#line 14 "parser.ypp"
+#line 17 "parser.ypp"
 
-#include <stdio.h>
-#include <string.h>
-#include<iostream>
-#line 22 "parser.ypp"
+    namespace yy
+    {
+        parser::symbol_type yylex();
+        // void parser::yyerror(const std::string &msg);
+    }
 
-    yy::parser::symbol_type yy::parser::yylex();
-    #include<iostream>
-    #include<string>
-    //void parser::yyerror(const char *error);
-
-#line 58 "parser.tab.cpp"
+#line 54 "parser.tab.cpp"
 
 
 #ifndef YY_
@@ -127,7 +123,7 @@
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 131 "parser.tab.cpp"
+#line 127 "parser.tab.cpp"
 
   /// Build a parser object.
   parser::parser ()
@@ -556,37 +552,37 @@ namespace yy {
           switch (yyn)
             {
   case 4: // program: program SimpleDeclaration
-#line 40 "parser.ypp"
+#line 36 "parser.ypp"
                             {  }
-#line 562 "parser.tab.cpp"
+#line 558 "parser.tab.cpp"
     break;
 
   case 6: // VariableDeclaration: VAR IDENTIFIER COL type
-#line 46 "parser.ypp"
+#line 42 "parser.ypp"
                                              {std::cout<<"defined variable " << yystack_[2].value.as < std::string > () << " with type " << yystack_[0].value.as < std::string > () << std::endl; }
-#line 568 "parser.tab.cpp"
+#line 564 "parser.tab.cpp"
     break;
 
   case 7: // type: IDENTIFIER
-#line 48 "parser.ypp"
+#line 44 "parser.ypp"
       { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
-#line 574 "parser.tab.cpp"
+#line 570 "parser.tab.cpp"
     break;
 
   case 8: // type: PrimitiveType
-#line 49 "parser.ypp"
+#line 45 "parser.ypp"
   { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
-#line 580 "parser.tab.cpp"
+#line 576 "parser.tab.cpp"
     break;
 
   case 9: // PrimitiveType: ITYPE
-#line 52 "parser.ypp"
+#line 48 "parser.ypp"
                      { yylhs.value.as < std::string > () = "int"; }
-#line 586 "parser.tab.cpp"
+#line 582 "parser.tab.cpp"
     break;
 
 
-#line 590 "parser.tab.cpp"
+#line 586 "parser.tab.cpp"
 
             default:
               break;
@@ -850,7 +846,7 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    38,    38,    39,    40,    43,    46,    48,    49,    52
+       0,    34,    34,    35,    36,    39,    42,    44,    45,    48
   };
 
   void
@@ -882,26 +878,28 @@ namespace yy {
 
 
 } // yy
-#line 886 "parser.tab.cpp"
+#line 882 "parser.tab.cpp"
 
-#line 55 "parser.ypp"
+#line 51 "parser.ypp"
 
 
-
-// void parser::yyerror(const std::string& m)
-// {
-//     std::cout << "syntax error" << std::endl;
-// }
-
-yy::parser::symbol_type yy::parser::yylex()
+namespace yy
 {
-	return 0;
+    parser::symbol_type yylex()
+    {
+    	return 0;
+    }
+
+    void parser::error(const std::string &msg)
+    {
+        std::cout << "syntax error" << std::endl;
+    }
 }
+
 
 
 int main()
 {
-    //yy::parser p;
-    // for now return zero
+    std::cout <<"it seems I am working :D\n";
     return 0;
 }

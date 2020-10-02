@@ -1,25 +1,18 @@
-%language "c++"
 %require "3.2"
+%language "c++"
 %define api.value.type variant
 %define api.token.constructor
 %define parse.assert
-
 %code requires
 {
-    //#include "parser.tab.hpp"
     #include <iostream>
     #include <string>
-    namespace yy
-    {
-        class parser;
-    }
 }
+
+
 %code{
-    namespace yy
-    {
-        parser::symbol_type yylex();
-        // void parser::yyerror(const std::string &msg);
-    }
+    yy::parser::symbol_type yy::parser::yylex();
+    void yy::parser::yyerror(const char *error);
 }
 
 %token VAR COL ITYPE
@@ -49,24 +42,19 @@ PrimitiveType: ITYPE { $$ = "int"; }
 ;
 
 %%
-
-namespace yy
+void yy::parser::yyerror(const std::string& m)
 {
-    parser::symbol_type yylex()
-    {
-    	return 0;
-    }
-
-    void parser::error(const std::string &msg)
-    {
-        std::cout << "syntax error" << std::endl;
-    }
+    std::cout << "syntax error" << std::endl;
 }
-
+// also 'yy::parser::symbol_type yy::parser::yylex' doesn't work
+int yy::parser::yylex(semantic_type* yylval)
+{
+	return 0;
+}
 
 
 int main()
 {
-    std::cout <<"it seems I am working :D\n";
+    yy::parser p;
     return 0;
 }
