@@ -1310,6 +1310,9 @@ int main()
 {
     //scanner.set_file("inp.txt");
     std::cout << "let's go\n";
+    // this should work after setting up the scanner
+    //yy::parser p;
+    //p.parser();
     return 0;
 }
 
