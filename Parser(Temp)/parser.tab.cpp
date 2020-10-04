@@ -1328,8 +1328,8 @@ namespace yy {
 
 namespace yy
 {
-    //overriding yylex in scanner.cpp
-    
+    //overriding yylex in main.cpp
+
     void parser::error(const std::string& msg)
     {
         std::cout<<"syntax error!\n";
