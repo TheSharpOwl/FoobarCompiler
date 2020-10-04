@@ -404,9 +404,13 @@ namespace yy {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
-      // IDENTIFIER
-      // INTEGER
       // REAL
+      char dummy1[sizeof (double)];
+
+      // INTEGER
+      char dummy2[sizeof (int)];
+
+      // IDENTIFIER
       // TRU
       // FLS
       // type
@@ -417,7 +421,7 @@ namespace yy {
       // Expression
       // Primary
       // ModifiablePrimary
-      char dummy1[sizeof (std::string)];
+      char dummy3[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -641,9 +645,15 @@ namespace yy {
       {
         switch (this->kind ())
     {
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_INTEGER: // INTEGER
       case symbol_kind::S_REAL: // REAL
+        value.move< double > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_INTEGER: // INTEGER
+        value.move< int > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_TRU: // TRU
       case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
@@ -675,6 +685,28 @@ namespace yy {
 #else
       basic_symbol (typename Base::kind_type t)
         : Base (t)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, double&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const double& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, int&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const int& v)
+        : Base (t)
+        , value (v)
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -711,9 +743,15 @@ namespace yy {
         // Value type destructor.
 switch (yykind)
     {
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_INTEGER: // INTEGER
       case symbol_kind::S_REAL: // REAL
+        value.template destroy< double > ();
+        break;
+
+      case symbol_kind::S_INTEGER: // INTEGER
+        value.template destroy< int > ();
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_TRU: // TRU
       case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
@@ -827,16 +865,42 @@ switch (yykind)
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok, double v)
+        : super_type(token_type (tok), std::move (v))
+      {
+        YY_ASSERT (tok == token::REAL);
+      }
+#else
+      symbol_type (int tok, const double& v)
+        : super_type(token_type (tok), v)
+      {
+        YY_ASSERT (tok == token::REAL);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok, int v)
+        : super_type(token_type (tok), std::move (v))
+      {
+        YY_ASSERT (tok == token::INTEGER);
+      }
+#else
+      symbol_type (int tok, const int& v)
+        : super_type(token_type (tok), v)
+      {
+        YY_ASSERT (tok == token::INTEGER);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, std::string v)
         : super_type(token_type (tok), std::move (v))
       {
-        YY_ASSERT (tok == token::IDENTIFIER || tok == token::INTEGER || tok == token::REAL || tok == token::TRU || tok == token::FLS);
+        YY_ASSERT (tok == token::IDENTIFIER || tok == token::TRU || tok == token::FLS);
       }
 #else
       symbol_type (int tok, const std::string& v)
         : super_type(token_type (tok), v)
       {
-        YY_ASSERT (tok == token::IDENTIFIER || tok == token::INTEGER || tok == token::REAL || tok == token::TRU || tok == token::FLS);
+        YY_ASSERT (tok == token::IDENTIFIER || tok == token::TRU || tok == token::FLS);
       }
 #endif
     };
@@ -952,14 +1016,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_INTEGER (std::string v)
+      make_INTEGER (int v)
       {
         return symbol_type (token::INTEGER, std::move (v));
       }
 #else
       static
       symbol_type
-      make_INTEGER (const std::string& v)
+      make_INTEGER (const int& v)
       {
         return symbol_type (token::INTEGER, v);
       }
@@ -967,14 +1031,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_REAL (std::string v)
+      make_REAL (double v)
       {
         return symbol_type (token::REAL, std::move (v));
       }
 #else
       static
       symbol_type
-      make_REAL (const std::string& v)
+      make_REAL (const double& v)
       {
         return symbol_type (token::REAL, v);
       }
@@ -2028,9 +2092,15 @@ switch (yykind)
   {
     switch (this->kind ())
     {
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_INTEGER: // INTEGER
       case symbol_kind::S_REAL: // REAL
+        value.copy< double > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_INTEGER: // INTEGER
+        value.copy< int > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_TRU: // TRU
       case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
@@ -2073,9 +2143,15 @@ switch (yykind)
     super_type::move (s);
     switch (this->kind ())
     {
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_INTEGER: // INTEGER
       case symbol_kind::S_REAL: // REAL
+        value.move< double > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_INTEGER: // INTEGER
+        value.move< int > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_TRU: // TRU
       case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
@@ -2150,7 +2226,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2154 "parser.tab.hpp"
+#line 2230 "parser.tab.hpp"
 
 
 

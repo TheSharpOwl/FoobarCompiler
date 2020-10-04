@@ -7,7 +7,7 @@ void Scanner::set_file(std::string filename)
     reader.set_file(filename);
 }
 
-int Scanner::get_next_token(YYSTYPE *lvalp)
+yy::parser::symbol_type Scanner::get_next_token()
 {
     /* skip leading spaces */
     c = reader.next_character();
@@ -15,10 +15,10 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
         c = reader.next_character();
     }
     if (c == '\n') {
-        return EOL;
+        return yy::parser::make_EOL ();
     }
     if (c == EOF) {
-        return YYEOF;
+        return yy::parser::make_YYEOF();
     }
 
     /* check if special character can be uniquely identified */
@@ -53,7 +53,7 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             c = reader.next_character();
             if (c == '.') {
                 if (is_real) { /* second dot in number like 21.32. */
-                    return YYUNDEF;
+                    return yy::parser::make_YYUNDEF();
                 }
                 char next_c = reader.next_character();
                 reader.move_back_ptr();
@@ -69,15 +69,13 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
 
         if (is_real) {
             double number = std::stod( buffer );
-            lvalp->d = number;
             buffer.clear();
-            return REAL;
+            return yy::parser::make_REAL(number);
         }
         else {
             int number = std::stoi( buffer );
-            lvalp->n = number;
             buffer.clear();
-            return INTEGER;
+            return yy::parser::make_INTEGER(number);
         }
     }
 
@@ -95,22 +93,23 @@ int Scanner::get_next_token(YYSTYPE *lvalp)
             return token_struct->second;
         }
         else {
-            lvalp->s = new std::string(buffer);
-            buffer.clear();
-            return IDENTIFIER;
+            std::string temp = "";
+            // faster than moving/copying to temp then clearing the buffer
+            std::swap(buffer,temp);
+            return yy::parser::make_IDENTIFIER(temp);
         }
     }
 
     if (c == '.') {
         char next_c = reader.next_character();
         if (next_c == '.') {
-            return RNG;
+            return yy::parser::make_RNG();
         }
         else {
             reader.move_back_ptr();
-            return DOTN;
+            return yy::parser::make_DOTN();
         }
     }
 
-    return YYUNDEF;
+    return yy::parser::make_YYUNDEF();
 }
