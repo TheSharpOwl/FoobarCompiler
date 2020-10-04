@@ -1,8 +1,6 @@
 #include "Scanner.h"
 #include <string>
 #include <cstring>
-//TODO delete
-#include <iostream>
 
 Scanner::Scanner(const std::string& filename)
 {
@@ -119,3 +117,4 @@ yy::parser::symbol_type Scanner::get_next_token()
 
     return yy::parser::make_YYUNDEF();
 }
+

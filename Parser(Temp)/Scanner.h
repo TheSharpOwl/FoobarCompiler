@@ -16,6 +16,7 @@ public:
     Scanner(){};
     ~Scanner(){};
     Scanner(const std::string &filename);
+    void parse();
 private:
 
     Reader reader;
