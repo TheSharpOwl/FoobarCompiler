@@ -1317,7 +1317,7 @@ yyreduce:
 
   case 8: /* VariableDeclaration: VAR IDENTIFIER COL type  */
 #line 80 "parser.ypp"
-                                             {std::cout<<"defined variable " << (yyvsp[-2].s) << " with type " << (yyvsp[0].s)[0] << std::endl; }
+                                             {std::cout<<"defined variable " << (yyvsp[-2].s) << " with type " << (yyvsp[0].s) << std::endl; }
 #line 1322 "parser.tab.cpp"
     break;
 

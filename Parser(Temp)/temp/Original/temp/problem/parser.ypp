@@ -13,7 +13,6 @@
     {
         class parser;
     }
-}
 %code{
     namespace yy
     {
