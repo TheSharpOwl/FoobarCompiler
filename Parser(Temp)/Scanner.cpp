@@ -1,8 +1,14 @@
 #include "Scanner.h"
 #include <string>
 #include <cstring>
+//TODO delete
+#include <iostream>
 
-void Scanner::set_file(std::string filename)
+Scanner::Scanner(const std::string& filename)
+{
+    set_file(filename);
+}
+void Scanner::set_file(const std::string& filename)
 {
     reader.set_file(filename);
 }

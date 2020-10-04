@@ -3,7 +3,7 @@
 
 #include "Reader.h"
 
-void Reader::set_file(std::string filename)
+void Reader::set_file(const std::string& filename)
 {
     std::ifstream f(filename); //taking file as inputstream
     if (f) {

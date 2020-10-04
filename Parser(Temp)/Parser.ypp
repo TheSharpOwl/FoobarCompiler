@@ -53,7 +53,7 @@
 
 
 %type <std::string> type PrimitiveType IDENTIFIER RecordType ArrayType
-%type <std::string> Expression Primary TRU FLS ModifiablePrimary RoutineCall
+%type <std::string> Expression Primary ModifiablePrimary RoutineCall
 %type <double> REAL
 %type <int> INTEGER
 

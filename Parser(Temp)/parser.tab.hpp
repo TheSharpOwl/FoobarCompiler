@@ -411,8 +411,6 @@ namespace yy {
       char dummy2[sizeof (int)];
 
       // IDENTIFIER
-      // TRU
-      // FLS
       // type
       // PrimitiveType
       // RecordType
@@ -654,8 +652,6 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_TRU: // TRU
-      case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
       case symbol_kind::S_PrimitiveType: // PrimitiveType
       case symbol_kind::S_RecordType: // RecordType
@@ -752,8 +748,6 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_TRU: // TRU
-      case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
       case symbol_kind::S_PrimitiveType: // PrimitiveType
       case symbol_kind::S_RecordType: // RecordType
@@ -855,13 +849,13 @@ switch (yykind)
       symbol_type (int tok)
         : super_type(token_type (tok))
       {
-        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
+        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::TRU || tok == token::FLS || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
       }
 #else
       symbol_type (int tok)
         : super_type(token_type (tok))
       {
-        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
+        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::TRU || tok == token::FLS || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -894,13 +888,13 @@ switch (yykind)
       symbol_type (int tok, std::string v)
         : super_type(token_type (tok), std::move (v))
       {
-        YY_ASSERT (tok == token::IDENTIFIER || tok == token::TRU || tok == token::FLS);
+        YY_ASSERT (tok == token::IDENTIFIER);
       }
 #else
       symbol_type (int tok, const std::string& v)
         : super_type(token_type (tok), v)
       {
-        YY_ASSERT (tok == token::IDENTIFIER || tok == token::TRU || tok == token::FLS);
+        YY_ASSERT (tok == token::IDENTIFIER);
       }
 #endif
     };
@@ -1301,31 +1295,31 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_TRU (std::string v)
+      make_TRU ()
       {
-        return symbol_type (token::TRU, std::move (v));
+        return symbol_type (token::TRU);
       }
 #else
       static
       symbol_type
-      make_TRU (const std::string& v)
+      make_TRU ()
       {
-        return symbol_type (token::TRU, v);
+        return symbol_type (token::TRU);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_FLS (std::string v)
+      make_FLS ()
       {
-        return symbol_type (token::FLS, std::move (v));
+        return symbol_type (token::FLS);
       }
 #else
       static
       symbol_type
-      make_FLS (const std::string& v)
+      make_FLS ()
       {
-        return symbol_type (token::FLS, v);
+        return symbol_type (token::FLS);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -2101,8 +2095,6 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_TRU: // TRU
-      case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
       case symbol_kind::S_PrimitiveType: // PrimitiveType
       case symbol_kind::S_RecordType: // RecordType
@@ -2152,8 +2144,6 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_TRU: // TRU
-      case symbol_kind::S_FLS: // FLS
       case symbol_kind::S_type: // type
       case symbol_kind::S_PrimitiveType: // PrimitiveType
       case symbol_kind::S_RecordType: // RecordType
@@ -2226,7 +2216,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2230 "parser.tab.hpp"
+#line 2220 "parser.tab.hpp"
 
 
 

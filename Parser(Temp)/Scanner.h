@@ -8,6 +8,16 @@
 
 class Scanner
 {
+
+public:
+
+    void set_file(const std::string& filename);
+    yy::parser::symbol_type get_next_token();
+    Scanner(){};
+    ~Scanner(){};
+    Scanner(const std::string &filename);
+private:
+
     Reader reader;
     std::string buffer;
     char c;
@@ -61,8 +71,4 @@ class Scanner
                     {"real", yy::parser::make_RTYPE()  },
                     {"boolean", yy::parser::make_BTYPE()  }
             };
-
-public:
-    void set_file(std::string filename);
-    yy::parser::symbol_type get_next_token();
 };
