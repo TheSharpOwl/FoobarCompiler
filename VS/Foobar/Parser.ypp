@@ -67,10 +67,10 @@
 
 
 %%
-program:
+program: {std::cout << "welcome to our program\n";}
 | program EOL
 | program SimpleDeclaration {  }
-| program RoutineDeclaration
+| program RoutineDeclaration {/* TODO use this to add the pointers to our routines*/}
 ;
 
 SimpleDeclaration: VariableDeclaration
