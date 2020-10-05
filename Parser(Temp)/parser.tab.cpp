@@ -609,7 +609,7 @@ namespace yy {
 
   case 8: // VariableDeclaration: VAR IDENTIFIER COL type
 #line 80 "parser.ypp"
-                                             { std::cout << "hmmm\n"; std::cout << "defined variable " << yystack_[2].value.as < std::string > () << "with type" << yystack_[0].value.as < std::string > (); }
+                                             { std::cout << "defined variable " << yystack_[2].value.as < std::string > () << " with type " << yystack_[0].value.as < std::string > (); }
 #line 614 "parser.tab.cpp"
     break;
 
@@ -621,13 +621,13 @@ namespace yy {
 
   case 12: // RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END
 #line 88 "parser.ypp"
-                                                                  { std::cout << "routine " << yystack_[6].value.as < std::string > () << "was declared\n"; }
+                                                                  { std::cout << "routine " << yystack_[6].value.as < std::string > () << " was declared\n"; }
 #line 626 "parser.tab.cpp"
     break;
 
   case 13: // RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR COL type IS Body END
 #line 89 "parser.ypp"
-                                                         {  std::cout << "routine " << yystack_[8].value.as < std::string > () << "was declared\n";  }
+                                                         {  std::cout << "routine " << yystack_[8].value.as < std::string > () << " was declared\n";  }
 #line 632 "parser.tab.cpp"
     break;
 
@@ -813,7 +813,7 @@ namespace yy {
 
   case 66: // Expression: LBR Expression RBR
 #line 176 "parser.ypp"
-                     { yylhs.value.as < std::string > () = yystack_[1].value.as < std::string > (); std::cout  << "braces around" << yylhs.value.as < std::string > () << "\n"; }
+                     { yylhs.value.as < std::string > () = yystack_[1].value.as < std::string > (); std::cout  << "braces around " << yylhs.value.as < std::string > () << "\n"; }
 #line 818 "parser.tab.cpp"
     break;
 

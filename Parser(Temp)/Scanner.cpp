@@ -114,7 +114,6 @@ yy::parser::symbol_type Scanner::get_next_token()
             return yy::parser::make_DOTN();
         }
     }
-
     return yy::parser::make_YYUNDEF();
 }
 
