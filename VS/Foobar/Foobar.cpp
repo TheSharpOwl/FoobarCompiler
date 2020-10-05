@@ -1,23 +1,21 @@
-// Foobar.cpp : This file contains the 'main' function. Program execution begins and ends there.
-
 #include <iostream>
-
 #include "Scanner.h"
-#include "AST.h"
-class Reader;
+
+Scanner scanner;
 
 int main()
-{
-	// TODO delete the next line
-	Scanner lexer;
-	std::string filename;
-	std::cin >> filename;
-	lexer.set_file(filename);
-	const char* TOKEN = lexer.get_next_token();
-	while (strcmp(TOKEN, "EOF") != 0) 
-	{
-		printf("%s", TOKEN);
-		TOKEN = lexer.get_next_token();
-	}
+{   
+    scanner.set_file("inp.txt");
+    std::cout << "let's go\n";
+    // this should work after setting up the scanner
+    yy::parser p;
+	int x = p.parse();
     return 0;
+}
+namespace yy
+{
+    parser::symbol_type yylex()
+    {
+        return scanner.get_next_token();
+    }
 }

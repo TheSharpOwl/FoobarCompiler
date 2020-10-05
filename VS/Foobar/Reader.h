@@ -1,4 +1,5 @@
 #pragma once
+
 #include<string>
 
 class Reader {
@@ -7,7 +8,7 @@ public:
     int size = 0;
     int ptr = -1;
 
-    void set_file(std::string filename);
+    void set_file(const std::string& filename);
 
     char next_character();
 
@@ -15,4 +16,3 @@ public:
 
     char current_character() { return file[ptr];}
 };
-

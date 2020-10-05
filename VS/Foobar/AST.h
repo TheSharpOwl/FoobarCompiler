@@ -29,8 +29,6 @@ int sum(T x, T y)
 	return x + y;
 }
 
-z = sum<int>(5, 7);
-
 namespace ast
 {
 

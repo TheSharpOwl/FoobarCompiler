@@ -145,13 +145,18 @@
   <ItemGroup>
     <ClCompile Include="AST.cpp" />
     <ClCompile Include="Foobar.cpp" />
+    <ClCompile Include="parser.tab.cpp" />
     <ClCompile Include="Reader.cpp" />
     <ClCompile Include="Scanner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h" />
+    <ClInclude Include="parser.tab.hpp" />
     <ClInclude Include="Reader.h" />
     <ClInclude Include="Scanner.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="inp.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

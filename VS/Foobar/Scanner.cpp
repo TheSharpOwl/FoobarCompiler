@@ -1,11 +1,17 @@
 #include "Scanner.h"
+#include <string>
+#include <cstring>
 
-void Scanner::set_file(std::string filename)
+Scanner::Scanner(const std::string& filename)
+{
+    set_file(filename);
+}
+void Scanner::set_file(const std::string& filename)
 {
     reader.set_file(filename);
 }
 
-const char *Scanner::get_next_token()
+yy::parser::symbol_type Scanner::get_next_token()
 {
     /* skip leading spaces */
     c = reader.next_character();
@@ -13,18 +19,17 @@ const char *Scanner::get_next_token()
         c = reader.next_character();
     }
     if (c == '\n') {
-        return "\n";
+        return yy::parser::make_EOL ();
     }
     if (c == EOF) {
-        return "EOF";
+        return yy::parser::make_YYEOF();
     }
 
     /* check if special character can be uniquely identified */
     bool is_in = single_chars.find(c) != single_chars.end();
     if (is_in) {
         std::string s(1, c);
-        const char* return_val = string_to_token.find(s)->second;
-        return return_val;
+        return string_to_token.find(s)->second;
     }
 
     /* check for other special characters  */
@@ -52,7 +57,7 @@ const char *Scanner::get_next_token()
             c = reader.next_character();
             if (c == '.') {
                 if (is_real) { /* second dot in number like 21.32. */
-                    return "ERR ";
+                    return yy::parser::make_YYUNDEF();
                 }
                 char next_c = reader.next_character();
                 reader.move_back_ptr();
@@ -67,16 +72,14 @@ const char *Scanner::get_next_token()
         reader.move_back_ptr();
 
         if (is_real) {
-            // double number;
-            // number = std::stod( buffer );
+            double number = std::stod( buffer );
             buffer.clear();
-            return "REAL ";
+            return yy::parser::make_REAL(number);
         }
         else {
-            // int number;
-            // number = std::stoi( buffer );
+            int number = std::stoi( buffer );
             buffer.clear();
-            return "INTEGER ";
+            return yy::parser::make_INTEGER(number);
         }
     }
 
@@ -89,26 +92,28 @@ const char *Scanner::get_next_token()
         reader.move_back_ptr();
 
         auto token_struct = string_to_token.find(buffer);
-        buffer.clear();
         if (token_struct != string_to_token.end()) {
+            buffer.clear();
             return token_struct->second;
         }
         else {
-            return "IDENTIFIER ";
+            std::string temp = "";
+            // faster than moving/copying to temp then clearing the buffer
+            std::swap(buffer,temp);
+            return yy::parser::make_IDENTIFIER(temp);
         }
     }
 
     if (c == '.') {
         char next_c = reader.next_character();
         if (next_c == '.') {
-            return "RNG ";
+            return yy::parser::make_RNG();
         }
         else {
             reader.move_back_ptr();
-            return "DOTN ";
+            return yy::parser::make_DOTN();
         }
     }
-
-    printf("%d", c);
-    return "UNKNOWN";
+    return yy::parser::make_YYUNDEF();
 }
+
