@@ -26,7 +26,11 @@ routine sort(a : array [] integer, b : boolean) is
     end
 end
 
-var a : array [10] integers
-fill(a,0)
-sort(a,false)
+
+
+routine main(inp : integer) is
+    var a : array [10] integers
+    fill(a,0)
+    sort(a,false)
+end
 

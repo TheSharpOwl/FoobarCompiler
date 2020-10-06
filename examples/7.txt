@@ -1,8 +1,8 @@
 var number : integer
-number := 184
+
 
 var originalNumber : integer
-originalNumber := number
+
 
 var isArmstrong is false
 
@@ -26,4 +26,9 @@ routine findArmstrongNumber(original : integer, num : integer, rem : integer, re
 end
 
 
-isArmstrong := findArmstrongNumber(number, originalNumber, remainder, result)
+routine main(inp : integer) is
+	number := 184
+	originalNumber := number
+	isArmstrong := findArmstrongNumber(number, originalNumber, remainder, result)
+end
+

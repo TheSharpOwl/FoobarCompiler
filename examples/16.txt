@@ -17,18 +17,20 @@ routine compareSubjects(first: subject, second: subject) : boolean is
 end
 
 
-var math : subject
+routine main(inp : integer) is
+    var math : subject
 
-math.id := 5
-math.professorId := 3
-math.credits := 0
-
-
-var physics : subject
-
-physics.id := 13
-physics.professorId := 5
-physics.credits := -30
+    math.id := 5
+    math.professorId := 3
+    math.credits := 0
 
 
-var mathIsAPhysics : boolean is compareSubjects(math, physics)
+    var physics : subject
+
+    physics.id := 13
+    physics.professorId := 5
+    physics.credits := -30
+
+
+    var mathIsAPhysics : boolean is compareSubjects(math, physics)
+end
