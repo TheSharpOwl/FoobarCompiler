@@ -32,16 +32,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Scanner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Reader.h">
+    <ClInclude Include="parser.tab.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AST.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="parser.tab.hpp">
+    <ClInclude Include="Reader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scanner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

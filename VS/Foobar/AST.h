@@ -119,7 +119,7 @@ namespace ast
 		// if l = r = nullptr this means we can't go deeper in the tree
 
 		// TODO might change to enum for symbols
-		variant<string, Ident> symbol, ident;
+		variant<string, Ident, long long int, double, bool> symbol, ident, iValue, rValue, bValue;
 		sp<Expression> l;
 		sp<Expression> r;
 		// TODO impelement function which returns Type of the expression
@@ -131,17 +131,9 @@ namespace ast
 	{
 		
 	};
-	struct Integer : Type
+	struct BuiltinType : Type
 	{
-		long long int value;
-	};
-	struct Real : Type
-	{
-		double value;
-	};
-	struct Bool : Type
-	{
-		bool value;
+		variant<long long int, double, bool> iValue, rValue, bValue;
 	};
 	struct Record : Type
 	{
