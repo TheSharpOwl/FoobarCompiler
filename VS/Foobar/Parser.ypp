@@ -66,10 +66,10 @@
 
 
 %type<sp<ast::Type> > temp // TODO delete
-%type<sp<ast::Type> > PrimitiveType
+%type<sp<ast::BuiltinType> > PrimitiveType
+%type<sp<ast::Type> > type;
 
 %type <std::string>  IDENTIFIER RecordType ArrayType
-%type<std::string> type;
 %type <std::string> Expression Primary ModifiablePrimary RoutineCall
 %type <double> REAL
 %type <int> INTEGER
@@ -94,7 +94,7 @@ SimpleDeclaration: VariableDeclaration
 | TypeDeclaration
 ;
 
-VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << "TODO" << "\n"; }
+VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << ($4)->name << "\n"; }
 | VAR IDENTIFIER IS Expression {}
 | VAR IDENTIFIER COL type IS Expression {}
 ;
@@ -114,7 +114,7 @@ ParameterDeclaration: IDENTIFIER COL type
 ;
 
 type:
-| PrimitiveType
+| PrimitiveType {$$ = $1; // casting from derived to base !!}
 /*| ArrayType*/
 /*| RecordType*/
 ;

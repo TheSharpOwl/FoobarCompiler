@@ -11,15 +11,8 @@ int main()
     scanner.set_file("inp.txt");
     yy::parser p;
 	p.parse();
-    
-	// sp<ast::Type> myType = std::make_shared<ast::Type>();
-
-	// myType->name = "test_type";
-	// myType->start = 0;
-	// myType->end = 100;
-
-	// auto var = std::make_shared<ast::Variable> ("test_variable", 0, 1, myType);
-	//std::cout << var->name << " " << var->type->name << '\n';
+    sp<ast::Type> temp = std::make_shared<ast::BuiltinType>("integer");
+    std::cout << temp->name << std::endl;
 
     return 0;
 }

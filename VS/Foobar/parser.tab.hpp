@@ -413,17 +413,19 @@ namespace yy {
       // INTEGER
       char dummy2[sizeof (int)];
 
-      // temp
       // PrimitiveType
-      char dummy3[sizeof (sp<ast::Type> )];
+      char dummy3[sizeof (sp<ast::BuiltinType> )];
+
+      // temp
+      // type
+      char dummy4[sizeof (sp<ast::Type> )];
 
       // IDENTIFIER
-      // type
       // RoutineCall
       // Expression
       // Primary
       // ModifiablePrimary
-      char dummy4[sizeof (std::string)];
+      char dummy5[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -654,13 +656,16 @@ namespace yy {
         value.move< int > (std::move (that.value));
         break;
 
-      case symbol_kind::S_temp: // temp
       case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.move< sp<ast::BuiltinType>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_type: // type
         value.move< sp<ast::Type>  > (std::move (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -706,6 +711,17 @@ namespace yy {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const int& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::BuiltinType> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::BuiltinType> & v)
         : Base (t)
         , value (v)
       {}
@@ -763,13 +779,16 @@ switch (yykind)
         value.template destroy< int > ();
         break;
 
-      case symbol_kind::S_temp: // temp
       case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.template destroy< sp<ast::BuiltinType>  > ();
+        break;
+
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_type: // type
         value.template destroy< sp<ast::Type>  > ();
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -2140,13 +2159,16 @@ switch (yykind)
         value.copy< int > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_temp: // temp
       case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.copy< sp<ast::BuiltinType>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_type: // type
         value.copy< sp<ast::Type>  > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -2191,13 +2213,16 @@ switch (yykind)
         value.move< int > (YY_MOVE (s.value));
         break;
 
-      case symbol_kind::S_temp: // temp
       case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.move< sp<ast::BuiltinType>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_type: // type
         value.move< sp<ast::Type>  > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -2266,7 +2291,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2270 "parser.tab.hpp"
+#line 2295 "parser.tab.hpp"
 
 
 

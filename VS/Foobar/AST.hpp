@@ -40,6 +40,8 @@ namespace ast
 		int start, end;
 
 		Node() = default;
+		virtual ~Node() = default;
+
 	};
 	struct Program : Node
 	{
@@ -82,7 +84,7 @@ namespace ast
 
 	struct Statement : Node
 	{
-
+		virtual ~Statement() = default;
 	};
 	struct ReturnStatement : Statement
 	{
@@ -157,6 +159,8 @@ namespace ast
 		Type(Type&) = default;
 		Type& operator= (const Type & other) = default;
 		Type& operator= (Type&&) = default;
+
+		virtual ~Type() = default;
 
 	};
 	struct BuiltinType : Type
