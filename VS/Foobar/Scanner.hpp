@@ -3,7 +3,7 @@
 #include<map>
 #include<string>
 
-#include "Reader.h"
+#include "Reader.hpp"
 #include "parser.tab.hpp"
 
 class Scanner

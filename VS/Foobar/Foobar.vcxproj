@@ -143,17 +143,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AST.cpp" />
     <ClCompile Include="Foobar.cpp" />
     <ClCompile Include="parser.tab.cpp" />
     <ClCompile Include="Reader.cpp" />
     <ClCompile Include="Scanner.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AST.h" />
+    <ClInclude Include="AST.hpp" />
     <ClInclude Include="parser.tab.hpp" />
-    <ClInclude Include="Reader.h" />
-    <ClInclude Include="Scanner.h" />
+    <ClInclude Include="Reader.hpp" />
+    <ClInclude Include="Scanner.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="inp.txt" />

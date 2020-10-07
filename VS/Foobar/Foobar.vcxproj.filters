@@ -24,9 +24,6 @@
     <ClCompile Include="Reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AST.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="parser.tab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -35,13 +32,13 @@
     <ClInclude Include="parser.tab.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AST.h">
+    <ClInclude Include="AST.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Reader.h">
+    <ClInclude Include="Scanner.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scanner.h">
+    <ClInclude Include="Reader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

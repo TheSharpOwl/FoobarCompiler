@@ -8,20 +8,24 @@
 // TODO read about Visitor Pattern and try to apply it here
 
 // forward declerations 
-struct Node;
-struct Block;
-struct Routine;
-struct Variable;
-struct Statement;
-struct ReturnStatement;
-struct WhileLoop;
-struct IfStatement;
-struct ForLoop;
-struct Decleration;
-struct Assignment;
-struct Expression;
-struct Type;
-struct Ident;
+namespace ast
+{
+	struct Node;
+	struct Block;
+	struct Routine;
+	struct Variable;
+	struct Statement;
+	struct ReturnStatement;
+	struct WhileLoop;
+	struct IfStatement;
+	struct ForLoop;
+	struct Decleration;
+	struct Assignment;
+	struct Expression;
+	struct Type;
+	struct Ident;
+}
+
 
 template<typename T>
 int sum(T x, T y)
@@ -41,6 +45,8 @@ namespace ast
 	{
 		string name;
 		int start, end;
+
+		Node() = default;
 	};
 	struct Program : Node
 	{
@@ -66,6 +72,19 @@ namespace ast
 	struct Variable : Node
 	{
 		sp<Type> type;
+
+		Variable(const string& Name, int Start, int End, sp<Type> type2)
+		{
+			name = Name;
+			start = Start;
+			end = End;
+			this->type = make_shared<Type>(type2);
+		}
+		Variable() = default;
+		Variable(Variable&&) = default;
+		Variable(Variable&) = default;
+		Variable& operator= (const Variable&) = default;
+		Variable& operator= (Variable&&) = default;
 	};
 
 	struct Statement : Node
@@ -129,7 +148,18 @@ namespace ast
 
 	struct Type : Node
 	{
-		
+		Type(std::shared_ptr <Node> node)
+		{
+			name = node->name;
+			start = node->start;
+			end = node->end;
+		}
+		Type() = default;
+		Type(Type&&) = default;
+		Type(Type&) = default;
+		Type& operator= (const Type & other) = default;
+		Type& operator= (Type&&) = default;
+
 	};
 	struct BuiltinType : Type
 	{

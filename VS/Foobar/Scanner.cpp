@@ -1,4 +1,4 @@
-#include "Scanner.h"
+#include "Scanner.hpp"
 #include <string>
 #include <cstring>
 
