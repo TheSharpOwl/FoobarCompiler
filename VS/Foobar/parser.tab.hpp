@@ -49,14 +49,17 @@
 
     #include <iostream>
     #include <string>
+    #include "AST.hpp"
 
     // forward decleration
     namespace yy
     {
         class parser;
     }
+    template <typename T> using sp = std::shared_ptr<T>;
 
-#line 60 "parser.tab.hpp"
+
+#line 63 "parser.tab.hpp"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -190,7 +193,7 @@
 #endif
 
 namespace yy {
-#line 194 "parser.tab.hpp"
+#line 197 "parser.tab.hpp"
 
 
 
@@ -410,16 +413,17 @@ namespace yy {
       // INTEGER
       char dummy2[sizeof (int)];
 
+      // temp
+      // PrimitiveType
+      char dummy3[sizeof (sp<ast::Type> )];
+
       // IDENTIFIER
       // type
-      // PrimitiveType
-      // RecordType
-      // ArrayType
       // RoutineCall
       // Expression
       // Primary
       // ModifiablePrimary
-      char dummy3[sizeof (std::string)];
+      char dummy4[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -512,7 +516,8 @@ namespace yy {
     ITYPE = 302,                   // ITYPE
     RTYPE = 303,                   // RTYPE
     BTYPE = 304,                   // BTYPE
-    EOL = 305                      // EOL
+    EOL = 305,                     // EOL
+    temp = 306                     // temp
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -529,7 +534,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 51, ///< Number of tokens.
+        YYNTOKENS = 52, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -582,33 +587,31 @@ namespace yy {
         S_RTYPE = 48,                            // RTYPE
         S_BTYPE = 49,                            // BTYPE
         S_EOL = 50,                              // EOL
-        S_YYACCEPT = 51,                         // $accept
-        S_program = 52,                          // program
-        S_SimpleDeclaration = 53,                // SimpleDeclaration
-        S_VariableDeclaration = 54,              // VariableDeclaration
-        S_TypeDeclaration = 55,                  // TypeDeclaration
-        S_RoutineDeclaration = 56,               // RoutineDeclaration
-        S_Parameters = 57,                       // Parameters
-        S_ParameterDeclaration = 58,             // ParameterDeclaration
-        S_type = 59,                             // type
-        S_PrimitiveType = 60,                    // PrimitiveType
-        S_RecordType = 61,                       // RecordType
-        S_ArrayType = 62,                        // ArrayType
-        S_Body = 63,                             // Body
-        S_Statement = 64,                        // Statement
-        S_Returntatement = 65,                   // Returntatement
-        S_Assignment = 66,                       // Assignment
-        S_RoutineCall = 67,                      // RoutineCall
-        S_WhileLoop = 68,                        // WhileLoop
-        S_ForLoop = 69,                          // ForLoop
-        S_Range = 70,                            // Range
-        S_IfStatement = 71,                      // IfStatement
-        S_VariableDeclarationBlock = 72,         // VariableDeclarationBlock
-        S_Expression = 73,                       // Expression
-        S_Arguments = 74,                        // Arguments
-        S_Primary = 75,                          // Primary
-        S_VariableAcess = 76,                    // VariableAcess
-        S_ModifiablePrimary = 77                 // ModifiablePrimary
+        S_temp = 51,                             // temp
+        S_YYACCEPT = 52,                         // $accept
+        S_program = 53,                          // program
+        S_SimpleDeclaration = 54,                // SimpleDeclaration
+        S_VariableDeclaration = 55,              // VariableDeclaration
+        S_TypeDeclaration = 56,                  // TypeDeclaration
+        S_RoutineDeclaration = 57,               // RoutineDeclaration
+        S_Parameters = 58,                       // Parameters
+        S_ParameterDeclaration = 59,             // ParameterDeclaration
+        S_type = 60,                             // type
+        S_PrimitiveType = 61,                    // PrimitiveType
+        S_Body = 62,                             // Body
+        S_Statement = 63,                        // Statement
+        S_Returntatement = 64,                   // Returntatement
+        S_Assignment = 65,                       // Assignment
+        S_RoutineCall = 66,                      // RoutineCall
+        S_WhileLoop = 67,                        // WhileLoop
+        S_ForLoop = 68,                          // ForLoop
+        S_Range = 69,                            // Range
+        S_IfStatement = 70,                      // IfStatement
+        S_Expression = 71,                       // Expression
+        S_Arguments = 72,                        // Arguments
+        S_Primary = 73,                          // Primary
+        S_VariableAcess = 74,                    // VariableAcess
+        S_ModifiablePrimary = 75                 // ModifiablePrimary
       };
     };
 
@@ -651,11 +654,13 @@ namespace yy {
         value.move< int > (std::move (that.value));
         break;
 
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.move< sp<ast::Type>  > (std::move (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
-      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -706,6 +711,17 @@ namespace yy {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Type> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Type> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v)
         : Base (t)
         , value (std::move (v))
@@ -747,11 +763,13 @@ switch (yykind)
         value.template destroy< int > ();
         break;
 
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.template destroy< sp<ast::Type>  > ();
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
-      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -882,6 +900,19 @@ switch (yykind)
         : super_type(token_type (tok), v)
       {
         YY_ASSERT (tok == token::INTEGER);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok, sp<ast::Type>  v)
+        : super_type(token_type (tok), std::move (v))
+      {
+        YY_ASSERT (tok == token::temp);
+      }
+#else
+      symbol_type (int tok, const sp<ast::Type> & v)
+        : super_type(token_type (tok), v)
+      {
+        YY_ASSERT (tok == token::temp);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1712,6 +1743,21 @@ switch (yykind)
         return symbol_type (token::EOL);
       }
 #endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_temp (sp<ast::Type>  v)
+      {
+        return symbol_type (token::temp, std::move (v));
+      }
+#else
+      static
+      symbol_type
+      make_temp (const sp<ast::Type> & v)
+      {
+        return symbol_type (token::temp, v);
+      }
+#endif
 
 
   private:
@@ -1767,7 +1813,7 @@ switch (yykind)
     static const signed char yypgoto_[];
 
     // YYDEFGOTO[NTERM-NUM].
-    static const short yydefgoto_[];
+    static const signed char yydefgoto_[];
 
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
@@ -2016,8 +2062,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 453,     ///< Last index in yytable_.
-      yynnts_ = 27,  ///< Number of nonterminal symbols.
+      yylast_ = 406,     ///< Last index in yytable_.
+      yynnts_ = 24,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
 
@@ -2065,10 +2111,10 @@ switch (yykind)
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46,    47,    48,    49,    50
+      45,    46,    47,    48,    49,    50,    51
     };
     // Last valid token kind.
-    const int code_max = 305;
+    const int code_max = 306;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -2094,11 +2140,13 @@ switch (yykind)
         value.copy< int > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.copy< sp<ast::Type>  > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
-      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -2143,11 +2191,13 @@ switch (yykind)
         value.move< int > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_temp: // temp
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.move< sp<ast::Type>  > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
-      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -2216,7 +2266,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2220 "parser.tab.hpp"
+#line 2270 "parser.tab.hpp"
 
 
 

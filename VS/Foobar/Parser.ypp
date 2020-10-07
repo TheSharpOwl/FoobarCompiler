@@ -9,16 +9,22 @@
 {
     #include <iostream>
     #include <string>
+    #include "AST.hpp"
 
     // forward decleration
     namespace yy
     {
         class parser;
     }
+    template <typename T> using sp = std::shared_ptr<T>;
+
 }
 
 %code
 {
+    // Our program is defined here
+    sp<ast::Program> ourProgram;
+    
     namespace yy
     {
         parser::symbol_type yylex();
@@ -29,6 +35,7 @@
         std::cout<< first << op << second <<"\n";
         std::cout << "I am inside\n";
     }
+
 }
 
 /* declare tokens */
@@ -54,10 +61,15 @@
 %token ASN
 %token ITYPE RTYPE BTYPE
 %token EOL
+%token temp // TODO delete
 
 
 
-%type <std::string> type PrimitiveType IDENTIFIER RecordType ArrayType
+%type<sp<ast::Type> > temp // TODO delete
+%type<sp<ast::Type> > PrimitiveType
+
+%type <std::string>  IDENTIFIER RecordType ArrayType
+%type<std::string> type;
 %type <std::string> Expression Primary ModifiablePrimary RoutineCall
 %type <double> REAL
 %type <int> INTEGER
@@ -72,7 +84,7 @@
 
 
 %%
-program: {std::cout << "welcome to our program\n";}
+program: {ourProgram = std::make_shared<ast::Program>(); std::cout << "made a program\n"; }
 | program EOL
 | program SimpleDeclaration {/* TODO maybe use this to add the variables to our vars*/ }
 | program RoutineDeclaration {/* TODO use this to add the pointers to our routines*/}
@@ -82,7 +94,7 @@ SimpleDeclaration: VariableDeclaration
 | TypeDeclaration
 ;
 
-VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << $4; }
+VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << "TODO" << "\n"; }
 | VAR IDENTIFIER IS Expression {}
 | VAR IDENTIFIER COL type IS Expression {}
 ;
@@ -101,15 +113,15 @@ Parameters: ParameterDeclaration
 ParameterDeclaration: IDENTIFIER COL type
 ;
 
-type: IDENTIFIER
+type:
 | PrimitiveType
-| ArrayType
-| RecordType
+/*| ArrayType*/
+/*| RecordType*/
 ;
 
-PrimitiveType: ITYPE { $$ =  "int"; }
-| RTYPE {              $$ =  "real"; }
-| BTYPE {              $$ =  "bool"; }
+PrimitiveType: ITYPE { $$ = std::make_shared<ast::BuiltinType>("integer");}
+| RTYPE {              $$ =  std::make_shared<ast::BuiltinType> ("real"); }
+| BTYPE {              $$ =  std::make_shared<ast::BuiltinType> ("boolean"); }
 ;
 
 RecordType: RCRD VariableDeclarationBlock END {  $$ =  "record"; std::cout << "record was defined\n"; }

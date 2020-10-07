@@ -26,13 +26,6 @@ namespace ast
 	struct Ident;
 }
 
-
-template<typename T>
-int sum(T x, T y)
-{
-	return x + y;
-}
-
 namespace ast
 {
 
@@ -148,11 +141,16 @@ namespace ast
 
 	struct Type : Node
 	{
-		Type(std::shared_ptr <Node> node)
+		Type(shared_ptr <Node> node)
 		{
 			name = node->name;
 			start = node->start;
 			end = node->end;
+		}
+		Type(string otherName)
+		{
+			start = end = 0; //TODO change after adding the char count system
+			name = otherName;
 		}
 		Type() = default;
 		Type(Type&&) = default;
@@ -164,6 +162,11 @@ namespace ast
 	struct BuiltinType : Type
 	{
 		variant<long long int, double, bool> iValue, rValue, bValue;
+		BuiltinType(string otherName)
+		{
+			start = end = 0; //TODO change after adding the char count system
+			name = otherName;
+		}
 	};
 	struct Record : Type
 	{
