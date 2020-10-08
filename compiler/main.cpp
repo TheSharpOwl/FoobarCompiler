@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Scanner.h"
+#include "Scanner.hpp"
 #include<cstring>
 
 int main()

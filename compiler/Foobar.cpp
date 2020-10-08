@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Scanner.h"
+#include "Scanner.hpp"
 
 Scanner scanner;
 

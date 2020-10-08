@@ -1,7 +1,7 @@
 #include<fstream>
 #include<sstream>
 
-#include "Reader.h"
+#include "Reader.hpp"
 
 void Reader::set_file(const std::string& filename)
 {
