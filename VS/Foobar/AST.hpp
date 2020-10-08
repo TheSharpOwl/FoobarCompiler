@@ -149,7 +149,7 @@ namespace ast
 			start = node->start;
 			end = node->end;
 		}
-		Type(string otherName)
+		Type(const std::string& otherName, int st = 0, int en = 0)
 		{
 			start = end = 0; //TODO change after adding the char count system
 			name = otherName;
@@ -166,7 +166,8 @@ namespace ast
 	struct BuiltinType : Type
 	{
 		variant<long long int, double, bool> iValue, rValue, bValue;
-		BuiltinType(string otherName)
+		// TODO add a way to change the value
+		BuiltinType(const string& otherName, int st = 0, int en = 0) : Type(otherName, st, en)
 		{
 			start = end = 0; //TODO change after adding the char count system
 			name = otherName;
@@ -175,18 +176,25 @@ namespace ast
 	struct Record : Type
 	{
 		vsp<Type> fields;
+		Record(const string& name, vsp<Type> Fields, int st = 0, int en = 0) :
+			Type(name, st, en) {}
+		//TODO remove
+		Record(string name, int st = 0, int en = 0) :
+			Type(name, st, en) {}
 	};
 
 	struct Alias : Type
 	{
-		sp<Type> type; // the original one and "name" is already inherited
+		sp<Type> type; // the original one. "name" is already inherited
 	};
 
 	struct Array : Type
 	{
 		int size = 0;
 		sp<Type> type;
-		// TODO figure out how to store the values
+		Array(const std::string& name, int st = 0, int ed = 0) :
+			Type(name, st, ed){}
+		// TODO figure out how to store the values (I think I did already)
 	};
 }
 

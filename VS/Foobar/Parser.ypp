@@ -66,10 +66,13 @@
 
 
 %type<sp<ast::Type> > temp // TODO delete
-%type<sp<ast::BuiltinType> > PrimitiveType
 %type<sp<ast::Type> > type;
+%type<sp<ast::BuiltinType> > PrimitiveType
+%type<sp<ast::Array> > ArrayType;
+%type<sp<ast::Record> > RecordType;
 
-%type <std::string>  IDENTIFIER RecordType ArrayType
+
+%type <std::string>  IDENTIFIER
 %type <std::string> Expression Primary ModifiablePrimary RoutineCall
 %type <double> REAL
 %type <int> INTEGER
@@ -115,8 +118,8 @@ ParameterDeclaration: IDENTIFIER COL type
 
 type:
 | PrimitiveType {$$ = $1; /* casting from derived to base !!*/}
-| ArrayType {}
-| RecordType {}
+| ArrayType {$$ = $1; /* casting from derived to base !!*/}
+| RecordType {$$ = $1; /* casting from derived to base !!*/}
 ;
 
 PrimitiveType: ITYPE { $$ = std::make_shared<ast::BuiltinType>("integer");}
@@ -124,11 +127,11 @@ PrimitiveType: ITYPE { $$ = std::make_shared<ast::BuiltinType>("integer");}
 | BTYPE {              $$ =  std::make_shared<ast::BuiltinType> ("boolean"); }
 ;
 
-RecordType: RCRD VariableDeclarationBlock END {  $$ =  "record"; std::cout << "record was defined\n"; }
+RecordType: RCRD VariableDeclarationBlock END {  $$ =  std::make_shared<ast::Record>("Record"); }
 ;
 
-ArrayType: ARY LAR Expression RAR type {    $$ = "array"; std::cout <<"array was defined\n"; }
-| ARY LAR RAR type {                        $$ = "array"; std::cout << "array was defined\n"; }
+ArrayType: ARY LAR Expression RAR type { $$ = std::make_shared<ast::Array>("Array");}
+| ARY LAR RAR type {                     $$ = std::make_shared<ast::Array>("Array");}
 ;
 
 Body:
