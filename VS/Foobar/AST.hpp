@@ -143,7 +143,6 @@ namespace ast
 		spe l = nullptr;
 		spe r = nullptr;
 		// TODO implement function which returns Type of the expression
-		// TODO figure out other things to implement as functions here
 
 		// TODO store the expression from bison (need to solve the union bison issue)
 		Expression(const string& name) : 
