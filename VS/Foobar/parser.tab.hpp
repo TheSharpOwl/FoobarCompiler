@@ -421,6 +421,8 @@ namespace yy {
       char dummy4[sizeof (sp<ast::Type> )];
 
       // IDENTIFIER
+      // RecordType
+      // ArrayType
       // RoutineCall
       // Expression
       // Primary
@@ -600,20 +602,23 @@ namespace yy {
         S_ParameterDeclaration = 59,             // ParameterDeclaration
         S_type = 60,                             // type
         S_PrimitiveType = 61,                    // PrimitiveType
-        S_Body = 62,                             // Body
-        S_Statement = 63,                        // Statement
-        S_Returntatement = 64,                   // Returntatement
-        S_Assignment = 65,                       // Assignment
-        S_RoutineCall = 66,                      // RoutineCall
-        S_WhileLoop = 67,                        // WhileLoop
-        S_ForLoop = 68,                          // ForLoop
-        S_Range = 69,                            // Range
-        S_IfStatement = 70,                      // IfStatement
-        S_Expression = 71,                       // Expression
-        S_Arguments = 72,                        // Arguments
-        S_Primary = 73,                          // Primary
-        S_VariableAcess = 74,                    // VariableAcess
-        S_ModifiablePrimary = 75                 // ModifiablePrimary
+        S_RecordType = 62,                       // RecordType
+        S_ArrayType = 63,                        // ArrayType
+        S_Body = 64,                             // Body
+        S_Statement = 65,                        // Statement
+        S_Returntatement = 66,                   // Returntatement
+        S_Assignment = 67,                       // Assignment
+        S_RoutineCall = 68,                      // RoutineCall
+        S_WhileLoop = 69,                        // WhileLoop
+        S_ForLoop = 70,                          // ForLoop
+        S_Range = 71,                            // Range
+        S_IfStatement = 72,                      // IfStatement
+        S_VariableDeclarationBlock = 73,         // VariableDeclarationBlock
+        S_Expression = 74,                       // Expression
+        S_Arguments = 75,                        // Arguments
+        S_Primary = 76,                          // Primary
+        S_VariableAcess = 77,                    // VariableAcess
+        S_ModifiablePrimary = 78                 // ModifiablePrimary
       };
     };
 
@@ -666,6 +671,8 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_RecordType: // RecordType
+      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -789,6 +796,8 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_RecordType: // RecordType
+      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -1832,7 +1841,7 @@ switch (yykind)
     static const signed char yypgoto_[];
 
     // YYDEFGOTO[NTERM-NUM].
-    static const signed char yydefgoto_[];
+    static const short yydefgoto_[];
 
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
@@ -2081,8 +2090,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 406,     ///< Last index in yytable_.
-      yynnts_ = 24,  ///< Number of nonterminal symbols.
+      yylast_ = 444,     ///< Last index in yytable_.
+      yynnts_ = 27,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
 
@@ -2169,6 +2178,8 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_RecordType: // RecordType
+      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -2223,6 +2234,8 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_RecordType: // RecordType
+      case symbol_kind::S_ArrayType: // ArrayType
       case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
@@ -2291,7 +2304,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2295 "parser.tab.hpp"
+#line 2308 "parser.tab.hpp"
 
 
 

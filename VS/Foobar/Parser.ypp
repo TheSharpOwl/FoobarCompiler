@@ -114,9 +114,9 @@ ParameterDeclaration: IDENTIFIER COL type
 ;
 
 type:
-| PrimitiveType {$$ = $1; // casting from derived to base !!}
-/*| ArrayType*/
-/*| RecordType*/
+| PrimitiveType {$$ = $1; /* casting from derived to base !!*/}
+| ArrayType {}
+| RecordType {}
 ;
 
 PrimitiveType: ITYPE { $$ = std::make_shared<ast::BuiltinType>("integer");}
