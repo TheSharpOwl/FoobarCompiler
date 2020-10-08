@@ -19,7 +19,9 @@ yy::parser::symbol_type Scanner::get_next_token()
         c = reader.next_character();
     }
     if (c == '\n') {
-        return yy::parser::make_EOL ();
+        // TODO delete this
+        std::cout << "new line !\n";
+        return yy::parser::make_EOL();
     }
     if (c == EOF) {
         return yy::parser::make_YYEOF();

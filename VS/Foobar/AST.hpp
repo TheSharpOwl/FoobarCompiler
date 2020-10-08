@@ -23,6 +23,7 @@ namespace ast
 	struct Assignment;
 	struct Expression;
 	struct Type;
+	struct RoutineCall;
 	struct Ident;
 }
 
@@ -40,6 +41,9 @@ namespace ast
 		int start, end;
 
 		Node() = default;
+		Node(const string& s) : 
+			name(s) {}
+
 		virtual ~Node() = default;
 
 	};
@@ -126,21 +130,47 @@ namespace ast
 	};
 	struct Ident : Node
 	{
-
+		Ident(const string& s) :
+			Node(s) {}
 	};
 	struct Expression : Node
 	{
+		using spe = sp<Expression>;
 		// if l = r = nullptr this means we can't go deeper in the tree
 
 		// TODO might change to enum for symbols
-		variant<string, Ident, long long int, double, bool> symbol, ident, iValue, rValue, bValue;
-		sp<Expression> l;
-		sp<Expression> r;
-		// TODO impelement function which returns Type of the expression
-		// TODO store the expression from bison (need to solve the union bison issue)
-		// TODO figure out other things to impelement as funcitons here
-	};
+		variant<string, sp<Ident>, long long int, double, bool> symbol, ident, iValue, rValue, bValue;
+		spe l = nullptr;
+		spe r = nullptr;
+		// TODO implement function which returns Type of the expression
+		// TODO figure out other things to implement as functions here
 
+		// TODO store the expression from bison (need to solve the union bison issue)
+		Expression(const string& name) : 
+			Node(name) {}
+		Expression(const string& newSymbol, spe first, spe second)
+		{
+			symbol = newSymbol;
+			first = l;
+			second = r;
+		}
+
+		Expression(int val) : Node("INTEGER"), iValue(val){}
+		Expression(bool val) :   Node("BOOLEAN"), bValue(val){}
+		Expression(double val) : Node("REAL"), rValue(val){}
+		Expression(sp<Ident> otherIdent) :
+			Node("IDENT") 
+		{
+			ident = otherIdent;
+		}
+
+		virtual ~Expression() = default;
+	};
+	struct RoutineCall : Expression
+	{
+		vsp<Expression> args;
+
+	};
 	struct Type : Node
 	{
 		Type(shared_ptr <Node> node)

@@ -87,10 +87,10 @@
 
 
 %%
-program: {ourProgram = std::make_shared<ast::Program>(); std::cout << "made a program\n"; }
-| program EOL
+program:  /*{ourProgram = std::make_shared<ast::Program>(); std::cout << "made a program\n"; }*/
 | program SimpleDeclaration {/* TODO maybe use this to add the variables to our vars*/ }
 | program RoutineDeclaration {/* TODO use this to add the pointers to our routines*/}
+| program EOL
 ;
 
 SimpleDeclaration: VariableDeclaration
@@ -98,7 +98,7 @@ SimpleDeclaration: VariableDeclaration
 ;
 
 VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << ($4)->name << "\n"; }
-| VAR IDENTIFIER IS Expression {}
+| VAR IDENTIFIER IS Expression {std::cout << $2 << " " << $4 << std::endl;}
 | VAR IDENTIFIER COL type IS Expression {}
 ;
 
