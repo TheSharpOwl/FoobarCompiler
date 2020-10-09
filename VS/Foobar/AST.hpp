@@ -58,6 +58,19 @@ namespace ast
 	{
 		vsp<Variable> variables;
 		vsp<Statement> statemets;
+
+		Block() = default;
+		~Block() = default;
+
+		void addVariable(sp<Variable> v)
+		{
+			variables.push_back(v);
+		}
+		void addStatement(sp<Statement> s)
+		{
+			statemets.push_back(s);
+		}
+
 	};
 	struct Routine : Node
 	{

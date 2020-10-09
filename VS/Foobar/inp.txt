@@ -1,7 +1,7 @@
 var a is 5
 
 var b : integer
-var c : integer is 2 + 2
+var c : integer is (false + 1) 
 type int is integer
 type bool is boolean
 routine power(number : int, to_power : int) : int is

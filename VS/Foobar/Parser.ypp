@@ -35,6 +35,8 @@
         std::cout<< first << op << second <<"\n";
         std::cout << "I am inside\n";
     }
+
+    // TODO get rid of this function later + all its calls (it is just to print the results and make sure it works fine)
     void dfs(sp<ast::Expression> exp)
     {
         if(exp == nullptr)
@@ -113,8 +115,8 @@ SimpleDeclaration: VariableDeclaration
 ;
 
 VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << ($4)->name << "\n"; }
-| VAR IDENTIFIER IS Expression {std::cout << $2 << " " << ($4)->name << std::endl; dfs($4);}
-| VAR IDENTIFIER COL type IS Expression {std::cout << $2 << " " << ($6)->name << "\n"; dfs($6);}
+| VAR IDENTIFIER IS Expression {std::cout << $2 << " " << ($4)->name << std::endl; /*dfs($4);*/}
+| VAR IDENTIFIER COL type IS Expression {std::cout << $2 << " " << ($6)->name << "\n"; /*dfs($6);*/}
 ;
 
 TypeDeclaration: TKEY IDENTIFIER IS type { std::cout << "defined new type " << $2 << "\n"; }
@@ -149,9 +151,9 @@ ArrayType: ARY LAR Expression RAR type { $$ = std::make_shared<ast::Array>("Arra
 | ARY LAR RAR type {                     $$ = std::make_shared<ast::Array>("Array");}
 ;
 
-Body:
-| Body SimpleDeclaration
-| Body Statement
+Body: {std::cout << "started\n";}
+| Body SimpleDeclaration {std::cout <<"got a dec\n";};
+| Body Statement {std::cout << "got a statement\n";}
 | Body EOL
 ;
 
