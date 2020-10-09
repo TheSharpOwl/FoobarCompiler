@@ -35,7 +35,21 @@
         std::cout<< first << op << second <<"\n";
         std::cout << "I am inside\n";
     }
-
+    void dfs(sp<ast::Expression> exp)
+    {
+        if(exp == nullptr)
+        {
+            std::cout << "empty\n";
+            return;
+        }
+        std::cout << "node is :";
+        exp->print();
+        std::cout << "\ngo left\n";
+        dfs(exp->l);
+        std::cout << "go right\n";
+        dfs(exp->r);
+        std::cout << "go back\n";
+    }
 }
 
 /* declare tokens */
@@ -99,8 +113,8 @@ SimpleDeclaration: VariableDeclaration
 ;
 
 VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << ($4)->name << "\n"; }
-| VAR IDENTIFIER IS Expression {std::cout << $2 << " " << ($4)->name << std::endl;}
-| VAR IDENTIFIER COL type IS Expression {std::cout << $2 << " " << ($6)->name << "\n"; }
+| VAR IDENTIFIER IS Expression {std::cout << $2 << " " << ($4)->name << std::endl; dfs($4);}
+| VAR IDENTIFIER COL type IS Expression {std::cout << $2 << " " << ($6)->name << "\n"; dfs($6);}
 ;
 
 TypeDeclaration: TKEY IDENTIFIER IS type { std::cout << "defined new type " << $2 << "\n"; }

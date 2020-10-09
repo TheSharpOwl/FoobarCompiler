@@ -3,6 +3,7 @@
 #include<memory>
 #include <vector>
 #include <string>
+#include<utility>
 #include<variant>
 
 // TODO read about Visitor Pattern and try to apply it here
@@ -141,31 +142,38 @@ namespace ast
 		// if l = r = nullptr this means we can't go deeper in the tree
 		bool braces = false;
 		// TODO might change to enum for symbols
-		variant<string, sp<Ident>, long long int, double, bool> symbol, ident, iValue, rValue, bValue;
+		variant<string, sp<Ident>, long long int, double, bool> value;
 		spe l = nullptr;
 		spe r = nullptr;
 		// TODO implement function which returns Type of the expression
-
-		// TODO store the expression from bison (need to solve the union bison issue)
 		Expression(const string& name) : 
 			Node(name) {}
-		Expression(const string& newSymbol, spe first, spe second, bool braces = false)
+		Expression(const string& newSymbol, spe first, spe second, bool braces = false) : Node("Operation")
 		{
-			symbol = newSymbol;
-			first = l;
-			second = r;
+			value = newSymbol;
+			l = first;
+			r = second;
 		}
-
-		Expression(int val) : Node("INTEGER"), iValue(val){}
-		Expression(bool val) :   Node("BOOLEAN"), bValue(val){}
-		Expression(double val) : Node("REAL"), rValue(val){}
+		Expression(int val) : Node("INTEGER"), value(val){}
+		Expression(bool val) :   Node("BOOLEAN"), value(val){}
+		Expression(double val) : Node("REAL"), value(val){}
 		Expression(sp<Ident> otherIdent) :
 			Node("IDENT") 
 		{
-			ident = otherIdent;
+			value = otherIdent;
 		}
-
 		virtual ~Expression() = default;
+		void print() 
+		{
+			switch (value.index())
+			{
+			case 0: std::cout << get<0>(value) << std::endl; break;
+			case 1: std::cout << (get<1>(value))->name << std::endl; break;
+			case 2: std::cout << get<2>(value) << std::endl; break;
+			case 3: std::cout << get<3>(value) << std::endl; break;
+			case 4: std::cout << get<4>(value) << std::endl; break;
+			}
+		}
 	};
 	struct RoutineCall : Expression
 	{
