@@ -71,6 +71,8 @@ namespace ast
 	struct Variable : Node
 	{
 		sp<Type> type;
+		sp<Ident> ident;
+		sp<Expression> value = nullptr;
 
 		Variable(const string& Name, int Start, int End, sp<Type> type2)
 		{
@@ -137,7 +139,7 @@ namespace ast
 	{
 		using spe = sp<Expression>;
 		// if l = r = nullptr this means we can't go deeper in the tree
-
+		bool braces = false;
 		// TODO might change to enum for symbols
 		variant<string, sp<Ident>, long long int, double, bool> symbol, ident, iValue, rValue, bValue;
 		spe l = nullptr;
@@ -147,7 +149,7 @@ namespace ast
 		// TODO store the expression from bison (need to solve the union bison issue)
 		Expression(const string& name) : 
 			Node(name) {}
-		Expression(const string& newSymbol, spe first, spe second)
+		Expression(const string& newSymbol, spe first, spe second, bool braces = false)
 		{
 			symbol = newSymbol;
 			first = l;
@@ -172,7 +174,7 @@ namespace ast
 	};
 	struct Type : Node
 	{
-		Type(shared_ptr <Node> node)
+		Type(sp<Node> node)
 		{
 			name = node->name;
 			start = node->start;
