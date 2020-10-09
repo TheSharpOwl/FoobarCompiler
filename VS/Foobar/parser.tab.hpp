@@ -420,24 +420,42 @@ namespace yy {
       // ArrayType
       char dummy4[sizeof (sp<ast::Array> )];
 
+      // Assignment
+      char dummy5[sizeof (sp<ast::Assignment> )];
+
+      // Body
+      char dummy6[sizeof (sp<ast::Block> )];
+
       // PrimitiveType
-      char dummy5[sizeof (sp<ast::BuiltinType> )];
+      char dummy7[sizeof (sp<ast::BuiltinType> )];
 
       // Expression
       // Primary
-      char dummy6[sizeof (sp<ast::Expression> )];
+      char dummy8[sizeof (sp<ast::Expression> )];
 
       // RecordType
-      char dummy7[sizeof (sp<ast::Record> )];
+      char dummy9[sizeof (sp<ast::Record> )];
+
+      // ReturnStatement
+      char dummy10[sizeof (sp<ast::ReturnStatement> )];
+
+      // RoutineCall
+      char dummy11[sizeof (sp<ast::RoutineCall> )];
+
+      // SimpleDeclaration
+      // Statement
+      // WhileLoop
+      // ForLoop
+      // IfStatement
+      char dummy12[sizeof (sp<ast::Statement> )];
 
       // temp
       // type
-      char dummy8[sizeof (sp<ast::Type> )];
+      char dummy13[sizeof (sp<ast::Type> )];
 
       // IDENTIFIER
-      // RoutineCall
       // ModifiablePrimary
-      char dummy9[sizeof (std::string)];
+      char dummy14[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -616,7 +634,7 @@ namespace yy {
         S_ArrayType = 63,                        // ArrayType
         S_Body = 64,                             // Body
         S_Statement = 65,                        // Statement
-        S_Returntatement = 66,                   // Returntatement
+        S_ReturnStatement = 66,                  // ReturnStatement
         S_Assignment = 67,                       // Assignment
         S_RoutineCall = 68,                      // RoutineCall
         S_WhileLoop = 69,                        // WhileLoop
@@ -680,6 +698,14 @@ namespace yy {
         value.move< sp<ast::Array>  > (std::move (that.value));
         break;
 
+      case symbol_kind::S_Assignment: // Assignment
+        value.move< sp<ast::Assignment>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.move< sp<ast::Block>  > (std::move (that.value));
+        break;
+
       case symbol_kind::S_PrimitiveType: // PrimitiveType
         value.move< sp<ast::BuiltinType>  > (std::move (that.value));
         break;
@@ -693,13 +719,28 @@ namespace yy {
         value.move< sp<ast::Record>  > (std::move (that.value));
         break;
 
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.move< sp<ast::ReturnStatement>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.move< sp<ast::RoutineCall>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_SimpleDeclaration: // SimpleDeclaration
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.move< sp<ast::Statement>  > (std::move (that.value));
+        break;
+
       case symbol_kind::S_temp: // temp
       case symbol_kind::S_type: // type
         value.move< sp<ast::Type>  > (std::move (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.move< std::string > (std::move (that.value));
         break;
@@ -769,6 +810,28 @@ namespace yy {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Assignment> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Assignment> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Block> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Block> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, sp<ast::BuiltinType> && v)
         : Base (t)
         , value (std::move (v))
@@ -797,6 +860,39 @@ namespace yy {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const sp<ast::Record> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::ReturnStatement> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::ReturnStatement> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::RoutineCall> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::RoutineCall> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Statement> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Statement> & v)
         : Base (t)
         , value (v)
       {}
@@ -863,6 +959,14 @@ switch (yykind)
         value.template destroy< sp<ast::Array>  > ();
         break;
 
+      case symbol_kind::S_Assignment: // Assignment
+        value.template destroy< sp<ast::Assignment>  > ();
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.template destroy< sp<ast::Block>  > ();
+        break;
+
       case symbol_kind::S_PrimitiveType: // PrimitiveType
         value.template destroy< sp<ast::BuiltinType>  > ();
         break;
@@ -876,13 +980,28 @@ switch (yykind)
         value.template destroy< sp<ast::Record>  > ();
         break;
 
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.template destroy< sp<ast::ReturnStatement>  > ();
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.template destroy< sp<ast::RoutineCall>  > ();
+        break;
+
+      case symbol_kind::S_SimpleDeclaration: // SimpleDeclaration
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.template destroy< sp<ast::Statement>  > ();
+        break;
+
       case symbol_kind::S_temp: // temp
       case symbol_kind::S_type: // type
         value.template destroy< sp<ast::Type>  > ();
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.template destroy< std::string > ();
         break;
@@ -2272,6 +2391,14 @@ switch (yykind)
         value.copy< sp<ast::Array>  > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_Assignment: // Assignment
+        value.copy< sp<ast::Assignment>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.copy< sp<ast::Block>  > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_PrimitiveType: // PrimitiveType
         value.copy< sp<ast::BuiltinType>  > (YY_MOVE (that.value));
         break;
@@ -2285,13 +2412,28 @@ switch (yykind)
         value.copy< sp<ast::Record>  > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.copy< sp<ast::ReturnStatement>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.copy< sp<ast::RoutineCall>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_SimpleDeclaration: // SimpleDeclaration
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.copy< sp<ast::Statement>  > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_temp: // temp
       case symbol_kind::S_type: // type
         value.copy< sp<ast::Type>  > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.copy< std::string > (YY_MOVE (that.value));
         break;
@@ -2342,6 +2484,14 @@ switch (yykind)
         value.move< sp<ast::Array>  > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_Assignment: // Assignment
+        value.move< sp<ast::Assignment>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.move< sp<ast::Block>  > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_PrimitiveType: // PrimitiveType
         value.move< sp<ast::BuiltinType>  > (YY_MOVE (s.value));
         break;
@@ -2355,13 +2505,28 @@ switch (yykind)
         value.move< sp<ast::Record>  > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.move< sp<ast::ReturnStatement>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.move< sp<ast::RoutineCall>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_SimpleDeclaration: // SimpleDeclaration
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.move< sp<ast::Statement>  > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_temp: // temp
       case symbol_kind::S_type: // type
         value.move< sp<ast::Type>  > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_RoutineCall: // RoutineCall
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.move< std::string > (YY_MOVE (s.value));
         break;
@@ -2427,7 +2592,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2431 "parser.tab.hpp"
+#line 2596 "parser.tab.hpp"
 
 
 

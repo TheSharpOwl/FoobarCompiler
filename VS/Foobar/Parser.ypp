@@ -89,11 +89,20 @@
 %type<sp<ast::Expression> > Expression
 %type<sp<ast::Expression> > Primary
 %type <std::string>  IDENTIFIER
-%type <std::string> ModifiablePrimary RoutineCall
+%type <std::string> ModifiablePrimary
 %type <double> REAL
 %type <int> INTEGER
 %type <bool> TRU FLS
 
+%type <sp<ast::Block> > Body
+%type <sp<ast::Statement> > IfStatement /*TODO*/
+%type <sp<ast::Statement> > WhileLoop/*TODO*/
+%type <sp<ast::Statement> > ForLoop/*TODO*/
+%type <sp<ast::Statement> > Statement
+%type <sp<ast::ReturnStatement> > ReturnStatement /* TODO change the name to correct one */
+%type <sp<ast::Assignment> > Assignment
+%type <sp<ast::Statement> > SimpleDeclaration /* TODO */
+%type <sp<ast::RoutineCall> > RoutineCall
 %left OR
 %left XOR
 %left AND
@@ -110,8 +119,8 @@ program:  /*{ourProgram = std::make_shared<ast::Program>(); std::cout << "made a
 | program EOL
 ;
 
-SimpleDeclaration: VariableDeclaration
-| TypeDeclaration
+SimpleDeclaration: VariableDeclaration  {$$ = std::make_shared<ast::Statement>(); /* TODO*/ }
+| TypeDeclaration                       {$$ = std::make_shared<ast::Statement>(); /* TODO*/ }
 ;
 
 VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << ($4)->name << "\n"; }
@@ -151,42 +160,42 @@ ArrayType: ARY LAR Expression RAR type { $$ = std::make_shared<ast::Array>("Arra
 | ARY LAR RAR type {                     $$ = std::make_shared<ast::Array>("Array");}
 ;
 
-Body: {std::cout << "started\n";}
-| Body SimpleDeclaration {std::cout <<"got a dec\n";};
-| Body Statement {std::cout << "got a statement\n";}
+Body: {$$ = std::make_shared<ast::Block>(); /* create an empty body */}
+| Body SimpleDeclaration {($1)->addStatement($2); $$ = $1;};
+| Body Statement {($1)->addStatement($2); $$ = $1;}
 | Body EOL
 ;
 
-Statement: Assignment
-| RoutineCall
-| WhileLoop
-| ForLoop
-| IfStatement
-| Returntatement {std::cout << "return\n";}
+Statement: Assignment   {$$ = $1;}
+| RoutineCall           {$$ = $1;}
+| WhileLoop             {$$ = $1;}
+| ForLoop               {$$ = $1;}
+| IfStatement           {$$ = $1;}
+| ReturnStatement        {$$ = $1;}
 ;
 
-Returntatement: RTN EOL
-| RTN Expression
+ReturnStatement: RTN EOL {   $$ = std::make_shared<ast::ReturnStatement>(nullptr);}
+| RTN Expression {          $$ = std::make_shared<ast::ReturnStatement>($2);}
 ;
 
-Assignment: ModifiablePrimary ASN Expression
+Assignment: ModifiablePrimary ASN Expression {$$ = std::make_shared<ast::Assignment>($1, $3);}
 ;
 
-RoutineCall: IDENTIFIER LBR Arguments RBR { std::cout << "routine " << $1 << " was called\n"; }
+RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>();/*TODO*/ }
 ;
 
-WhileLoop: WHL Expression LOP Body END { std::cout << "while loop\n"; }
+WhileLoop: WHL Expression LOP Body END { $$ = std::make_shared<ast::WhileLoop>(); /*TODO*/}
 ;
 
-ForLoop: FOR IDENTIFIER Range LOP Body END { std::cout << "for loop\n"; }
+ForLoop: FOR IDENTIFIER Range LOP Body END {$$ = std::make_shared<ast::ForLoop>(); /*TODO*/ }
 ;
 
 Range: IN Expression RNG Expression
 | IN REV Expression RNG Expression
 ;
 
-IfStatement: IF Expression THEN Body END
-| IF Expression THEN Body EOL ELSE Body END
+IfStatement: IF Expression THEN Body END {  $$ = std::make_shared<ast::IfStatement>($2, $4, nullptr);}
+| IF Expression THEN Body EOL ELSE Body END{$$ = std::make_shared<ast::IfStatement>($2, $4, $7);}
 ;
 
 VariableDeclarationBlock:
@@ -209,7 +218,7 @@ Expression: Primary { $$ = $1; }
 | Expression AND Expression {           $$ = std::make_shared<ast::Expression>("and", $1, $3); }
 | Expression OR Expression {            $$ = std::make_shared<ast::Expression>("or", $1, $3); }
 | Expression XOR Expression {           $$ = std::make_shared<ast::Expression>("xor", $1, $3); }
-| SUB Expression { sp<ast::Expression> temp = std::make_shared<ast::Expression>(-1); $$ = std::make_shared<ast::Expression>("*", temp, $2); }
+| SUB Expression { sp<ast::Expression> temp = std::make_shared<ast::Expression>(-1, false); $$ = std::make_shared<ast::Expression>("*", temp, $2); }
 | LBR Expression RBR { $$ = $2; std::cout  << "braces around " << $$ << "\n"; }
 ;
 
@@ -217,7 +226,7 @@ Arguments: Expression
 | Arguments COM Expression
 ;
 
-Primary: INTEGER {                      $$ = std::make_shared<ast::Expression>($1); }
+Primary: INTEGER {                      $$ = std::make_shared<ast::Expression>($1, false); }
 | REAL {                                $$ = std::make_shared<ast::Expression>($1); }
 | TRU {                                 $$ = std::make_shared<ast::Expression>($1); }
 | FLS {                                 $$ = std::make_shared<ast::Expression>($1); }

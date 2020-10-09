@@ -108,7 +108,10 @@ namespace ast
 	};
 	struct ReturnStatement : Statement
 	{
-		sp<Expression> returned;
+		sp<Expression> returned = nullptr;
+		ReturnStatement(sp<Expression> exp)
+		{returned = exp; }
+		ReturnStatement() = default;
 	};
 	struct WhileLoop : Statement
 	{
@@ -121,6 +124,9 @@ namespace ast
 		sp<Expression> condition;
 		sp<Block> body;
 		sp<Block> elseBody;
+
+		IfStatement(sp<Expression> exp, sp<Block> block, sp<Block> elseBlock) :
+			condition(exp), body(block), elseBody(elseBlock) {}
 	};
 	struct ForLoop : Statement
 	{
@@ -129,6 +135,7 @@ namespace ast
 		sp<Expression> rangeEnd;
 		sp<Variable> loopVar;
 		bool reversed = false; // by default
+		
 	};
 
 	struct Decleration : Statement
@@ -139,10 +146,15 @@ namespace ast
 
 	struct Assignment : Statement
 	{
-		sp<Expression> lValue;
-		sp<Ident> rValue;
+		sp<Expression> rValue;
+		sp<Ident> lValue;
 		// TODO function to check if lValue is a valid Ident
 		// TODO function to check if the rValue is valid (use the expression type determiner function)
+		Assignment(const string& identName, sp<Expression> exp) :
+			rValue(exp) 
+		{
+			lValue = make_shared<Ident>(identName);
+		}
 	};
 	struct Ident : Node
 	{
@@ -153,27 +165,24 @@ namespace ast
 	{
 		using spe = sp<Expression>;
 		// if l = r = nullptr this means we can't go deeper in the tree
-		bool braces = false;
 		// TODO might change to enum for symbols
-		variant<string, sp<Ident>, long long int, double, bool> value;
+		variant<string, long long int, double, bool> value;
 		spe l = nullptr;
 		spe r = nullptr;
 		// TODO implement function which returns Type of the expression
-		Expression(const string& name) : 
-			Node(name) {}
 		Expression(const string& newSymbol, spe first, spe second, bool braces = false) : Node("Operation")
 		{
 			value = newSymbol;
 			l = first;
 			r = second;
 		}
-		Expression(int val) : Node("INTEGER"), value(val){}
+		Expression(int val, bool temp) : Node("INTEGER"), value(val) {}
 		Expression(bool val) :   Node("BOOLEAN"), value(val){}
 		Expression(double val) : Node("REAL"), value(val){}
-		Expression(sp<Ident> otherIdent) :
+		Expression(const string& identName) :
 			Node("IDENT") 
 		{
-			value = otherIdent;
+			value = identName;
 		}
 		virtual ~Expression() = default;
 		void print() 
@@ -181,14 +190,13 @@ namespace ast
 			switch (value.index())
 			{
 			case 0: std::cout << get<0>(value) << std::endl; break;
-			case 1: std::cout << (get<1>(value))->name << std::endl; break;
+			case 1: std::cout << get<1>(value) << std::endl; break;
 			case 2: std::cout << get<2>(value) << std::endl; break;
 			case 3: std::cout << get<3>(value) << std::endl; break;
-			case 4: std::cout << get<4>(value) << std::endl; break;
 			}
 		}
 	};
-	struct RoutineCall : Expression
+	struct RoutineCall : Statement
 	{
 		vsp<Expression> args;
 
