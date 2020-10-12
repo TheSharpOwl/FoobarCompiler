@@ -160,6 +160,7 @@ namespace ast
 	{
 		Ident(const string& s) :
 			Node(s) {}
+
 	};
 	struct Expression : Node
 	{
@@ -170,7 +171,7 @@ namespace ast
 		spe l = nullptr;
 		spe r = nullptr;
 		// TODO implement function which returns Type of the expression
-		Expression(const string& newSymbol, spe first, spe second, bool braces = false) : Node("Operation")
+		Expression(const string& newSymbol, spe first, spe second = nullptr, bool braces = false) : Node("Operation")
 		{
 			value = newSymbol;
 			l = first;

@@ -431,6 +431,8 @@ namespace yy {
 
       // Expression
       // Primary
+      // VariableAcess
+      // ModifiablePrimary
       char dummy8[sizeof (sp<ast::Expression> )];
 
       // RecordType
@@ -454,7 +456,6 @@ namespace yy {
       char dummy13[sizeof (sp<ast::Type> )];
 
       // IDENTIFIER
-      // ModifiablePrimary
       char dummy14[sizeof (std::string)];
     };
 
@@ -712,6 +713,8 @@ namespace yy {
 
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
+      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.move< sp<ast::Expression>  > (std::move (that.value));
         break;
 
@@ -741,7 +744,6 @@ namespace yy {
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.move< std::string > (std::move (that.value));
         break;
 
@@ -973,6 +975,8 @@ switch (yykind)
 
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
+      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.template destroy< sp<ast::Expression>  > ();
         break;
 
@@ -1002,7 +1006,6 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.template destroy< std::string > ();
         break;
 
@@ -2405,6 +2408,8 @@ switch (yykind)
 
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
+      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.copy< sp<ast::Expression>  > (YY_MOVE (that.value));
         break;
 
@@ -2434,7 +2439,6 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
@@ -2498,6 +2502,8 @@ switch (yykind)
 
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
+      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.move< sp<ast::Expression>  > (YY_MOVE (s.value));
         break;
 
@@ -2527,7 +2533,6 @@ switch (yykind)
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
@@ -2592,7 +2597,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2596 "parser.tab.hpp"
+#line 2601 "parser.tab.hpp"
 
 
 
