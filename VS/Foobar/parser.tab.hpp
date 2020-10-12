@@ -455,8 +455,17 @@ namespace yy {
       // type
       char dummy13[sizeof (sp<ast::Type> )];
 
+      // ParameterDeclaration
+      char dummy14[sizeof (sp<ast::Variable> )];
+
       // IDENTIFIER
-      char dummy14[sizeof (std::string)];
+      char dummy15[sizeof (std::string)];
+
+      // Arguments
+      char dummy16[sizeof (std::vector<sp<ast::Expression> > )];
+
+      // Parameters
+      char dummy17[sizeof (std::vector<sp<ast::Variable> > )];
     };
 
     /// The size of the largest semantic type.
@@ -743,8 +752,20 @@ namespace yy {
         value.move< sp<ast::Type>  > (std::move (that.value));
         break;
 
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.move< sp<ast::Variable>  > (std::move (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.move< std::string > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.move< std::vector<sp<ast::Expression> >  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+        value.move< std::vector<sp<ast::Variable> >  > (std::move (that.value));
         break;
 
       default:
@@ -911,12 +932,45 @@ namespace yy {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Variable> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Variable> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v)
         : Base (t)
         , value (std::move (v))
       {}
 #else
       basic_symbol (typename Base::kind_type t, const std::string& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<sp<ast::Expression> > && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<sp<ast::Expression> > & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<sp<ast::Variable> > && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<sp<ast::Variable> > & v)
         : Base (t)
         , value (v)
       {}
@@ -1005,8 +1059,20 @@ switch (yykind)
         value.template destroy< sp<ast::Type>  > ();
         break;
 
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.template destroy< sp<ast::Variable>  > ();
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.template destroy< std::string > ();
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.template destroy< std::vector<sp<ast::Expression> >  > ();
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+        value.template destroy< std::vector<sp<ast::Variable> >  > ();
         break;
 
       default:
@@ -2307,7 +2373,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 444,     ///< Last index in yytable_.
+      yylast_ = 453,     ///< Last index in yytable_.
       yynnts_ = 27,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
@@ -2438,8 +2504,20 @@ switch (yykind)
         value.copy< sp<ast::Type>  > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.copy< sp<ast::Variable>  > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.copy< std::string > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.copy< std::vector<sp<ast::Expression> >  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+        value.copy< std::vector<sp<ast::Variable> >  > (YY_MOVE (that.value));
         break;
 
       default:
@@ -2532,8 +2610,20 @@ switch (yykind)
         value.move< sp<ast::Type>  > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.move< sp<ast::Variable>  > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.move< std::string > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.move< std::vector<sp<ast::Expression> >  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+        value.move< std::vector<sp<ast::Variable> >  > (YY_MOVE (s.value));
         break;
 
       default:
@@ -2597,7 +2687,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2601 "parser.tab.hpp"
+#line 2691 "parser.tab.hpp"
 
 
 

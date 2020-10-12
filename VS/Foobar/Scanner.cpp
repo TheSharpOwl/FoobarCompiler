@@ -19,8 +19,6 @@ yy::parser::symbol_type Scanner::get_next_token()
         c = reader.next_character();
     }
     if (c == '\n') {
-        // TODO delete this
-        std::cout << "new line !\n";
         return yy::parser::make_EOL();
     }
     if (c == EOF) {
@@ -92,7 +90,6 @@ yy::parser::symbol_type Scanner::get_next_token()
             c = reader.next_character();
         } while ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_');
         reader.move_back_ptr();
-
         auto token_struct = string_to_token.find(buffer);
         if (token_struct != string_to_token.end()) {
             buffer.clear();

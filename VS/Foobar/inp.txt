@@ -17,8 +17,10 @@ routine power(number : int, to_power : int) : int is
 	return tmp
 end
 
-routine main(input : integer) : int is 
 
+var c : integer is power(x, y)
+
+routine main(input : integer) : int is 
 	b := power(c, a)
 	a := power(b, c)
 	var d is power(c, 2) * power(c, 3)

@@ -104,6 +104,10 @@
 %type <sp<ast::Expression> > VariableAcess
 %type <sp<ast::Expression> > ModifiablePrimary
 %type <sp<ast::RoutineCall> > RoutineCall
+%type <std::vector<sp<ast::Expression> > > Arguments
+%type <sp<ast::Variable> > ParameterDeclaration
+%type <std::vector<sp<ast::Variable> > > Parameters
+
 %left OR
 %left XOR
 %left AND
@@ -132,18 +136,18 @@ VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " 
 TypeDeclaration: TKEY IDENTIFIER IS type { std::cout << "defined new type " << $2 << "\n"; }
 ;
 
-RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END { std::cout << "routine " << $2 << " was declared\n"; }
-| RUT IDENTIFIER LBR Parameters RBR COL type IS Body END {  std::cout << "routine " << $2 << " was declared\n";  }
+RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END { std::cout << "routine " << $2 << " was declared\n";/* TODO add parameters*/ }
+| RUT IDENTIFIER LBR Parameters RBR COL type IS Body END {  std::cout << "routine " << $2 << " was declared\n";  /*TODO add parameters */}
 ;
 
-Parameters: ParameterDeclaration
-| Parameters COM ParameterDeclaration
+Parameters: ParameterDeclaration {($$).push_back($1); /* will be emptied when we go back to the routine */}
+| Parameters COM ParameterDeclaration {($$).push_back($3);}
 ;
 
-ParameterDeclaration: IDENTIFIER COL type
+ParameterDeclaration: IDENTIFIER COL type {$$ = std::make_shared<ast::Variable>($1, 0,0,$3);}
 ;
 
-type:
+type: IDENTIFIER {$$ = std::make_shared<ast::Type>($1);}
 | PrimitiveType {$$ = $1; /* casting from derived to base !!*/}
 | ArrayType {$$ = $1; /* casting from derived to base !!*/}
 | RecordType {$$ = $1; /* casting from derived to base !!*/}
@@ -182,7 +186,7 @@ ReturnStatement: RTN EOL {   $$ = std::make_shared<ast::ReturnStatement>(nullptr
 Assignment: ModifiablePrimary ASN Expression {$$ = std::make_shared<ast::Assignment>(std::get<0>(($1)->value), $3);}
 ;
 
-RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>();/*TODO*/ }
+RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>(); /*TODO delete*/ ($$)->args = std::move($3); for(auto a : ($$)->args) a->print();}
 ;
 
 WhileLoop: WHL Expression LOP Body END { $$ = std::make_shared<ast::WhileLoop>(); /*TODO*/}
@@ -223,8 +227,8 @@ Expression: Primary { $$ = $1; }
 | LBR Expression RBR { $$ = $2;}
 ;
 
-Arguments: Expression
-| Arguments COM Expression
+Arguments: Expression {($$).push_back($1); std::cout << ($$).size() << "\n";}
+| Arguments COM Expression {swap($$,$1); ($$).push_back($3); std::cout << ($$).size() << "\n";}
 ;
 
 Primary: INTEGER {                      $$ = std::make_shared<ast::Expression>($1, false); }
@@ -243,7 +247,10 @@ VariableAcess: {$$ = nullptr;}
 
 ModifiablePrimary: IDENTIFIER VariableAcess {
                                             sp<ast::Expression> temp = std::make_shared<ast::Expression>($1);
-                                            $$ = std::make_shared<ast::Expression>(".",temp, $2);
+                                            if($2 != nullptr)
+                                                $$ = std::make_shared<ast::Expression>(".",temp, $2);
+                                            else
+                                                $$ = temp;
                                             }
 ;
 %%
