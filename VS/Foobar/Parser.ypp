@@ -107,6 +107,8 @@
 %type <std::vector<sp<ast::Expression> > > Arguments
 %type <sp<ast::Variable> > ParameterDeclaration
 %type <std::vector<sp<ast::Variable> > > Parameters
+%type <std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool> > Range
+
 
 %left OR
 %left XOR
@@ -199,18 +201,18 @@ Assignment: ModifiablePrimary ASN Expression {$$ = std::make_shared<ast::Assignm
 RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>(); ($$)->args = std::move($3);}
 ;
 
-WhileLoop: WHL Expression LOP Body END { $$ = std::make_shared<ast::WhileLoop>(); /*TODO*/}
+WhileLoop: WHL Expression LOP Body END { $$ = std::make_shared<ast::WhileLoop>($2, $4);}
 ;
 
-ForLoop: FOR IDENTIFIER Range LOP Body END {$$ = std::make_shared<ast::ForLoop>(); /*TODO*/ }
+ForLoop: FOR IDENTIFIER Range LOP Body END {$$ = std::make_shared<ast::ForLoop>($2, $3, $5);}
 ;
 
-Range: IN Expression RNG Expression
-| IN REV Expression RNG Expression
+Range: IN Expression RNG Expression {$$ = std::make_tuple($2,$4, false); }
+| IN REV Expression RNG Expression {$$ = std::make_tuple($3,$5, true); }
 ;
 
-IfStatement: IF Expression THEN Body END {  $$ = std::make_shared<ast::IfStatement>($2, $4, nullptr);}
-| IF Expression THEN Body EOL ELSE Body END{$$ = std::make_shared<ast::IfStatement>($2, $4, $7);}
+IfStatement: IF Expression THEN Body END {  $$ = std::make_shared<ast::IfStatement>($2, $4, nullptr); }
+| IF Expression THEN Body EOL ELSE Body END { $$ = std::make_shared<ast::IfStatement>($2, $4, $7); }
 ;
 
 VariableDeclarationBlock:

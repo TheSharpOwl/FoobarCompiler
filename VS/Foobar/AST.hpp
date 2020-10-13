@@ -5,6 +5,7 @@
 #include <string>
 #include<utility>
 #include<variant>
+#include<tuple>
 
 // TODO read about Visitor Pattern and try to apply it here
 
@@ -92,7 +93,6 @@ namespace ast
 		vsp<Variable> variables;
 		vsp<Statement> statemets;
 		vsp<Routine> routines;
-		Program() = default;
 	};
 	struct Block : Node
 	{
@@ -160,7 +160,11 @@ namespace ast
 	{
 		sp<Expression> condition;
 		sp<Block> body;
-
+		WhileLoop(sp<Expression> Cond, sp<Block> Body)
+		{
+			condition = Cond;
+			body = Body;
+		}
 	};
 	struct IfStatement : Statement
 	{
@@ -178,7 +182,13 @@ namespace ast
 		sp<Expression> rangeEnd;
 		sp<Variable> loopVar;
 		bool reversed = false; // by default
-		
+		ForLoop(const string& LoopVar, tuple<sp<ast::Expression>, sp<ast::Expression>, bool> Range, sp<Block> Body) :
+			 rangeStart(get<0>(Range)), rangeEnd(get<1>(Range)), reversed(get<2>(Range)), body(Body)
+		{
+			// TODO replace nullptr with ast::Expression::getType()
+			loopVar = make_shared<Variable>(LoopVar, start, end, nullptr); 
+		}
+		ForLoop() = default;
 	};
 
 	struct Decleration : Statement
