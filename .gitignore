@@ -437,3 +437,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 VS/Foobar/foobar
+VS/Foobar/parser.tab.cpp
+VS/Foobar/parser.tab.hpp
