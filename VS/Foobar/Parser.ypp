@@ -106,7 +106,7 @@
 %type <sp<ast::Variable> > ParameterDeclaration
 %type <std::vector<sp<ast::Variable> > > Parameters
 %type <std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool> > Range
-
+%type <std::vector<sp<ast::Variable> > > VariableDeclarationBlock
 
 %left OR
 %left XOR
@@ -120,7 +120,7 @@
 %%
 program:
 | program VariableDeclaration {ourProgram->variables.push_back($2); }
-| program TypeDeclaration {/*TODO make a decision about it*/ }
+| program TypeDeclaration {}
 | program RoutineDeclaration {ourProgram->routines.push_back($2);}
 | program EOL
 ;
@@ -164,7 +164,7 @@ PrimitiveType: ITYPE { $$ = std::make_shared<ast::BuiltinType>("integer");}
 | BTYPE {              $$ =  std::make_shared<ast::BuiltinType> ("boolean"); }
 ;
 
-RecordType: RCRD VariableDeclarationBlock END {  $$ =  std::make_shared<ast::Record>("Record"); }
+RecordType: RCRD VariableDeclarationBlock END {  $$ = std::make_shared<ast::Record>("Record", $2); }
 ;
 
 ArrayType: ARY LAR Expression RAR type { $$ = std::make_shared<ast::Array>("Array");}
@@ -210,9 +210,9 @@ IfStatement: IF Expression THEN Body END {  $$ = std::make_shared<ast::IfStateme
 | IF Expression THEN Body EOL ELSE Body END { $$ = std::make_shared<ast::IfStatement>($2, $4, $7); }
 ;
 
-VariableDeclarationBlock:
-| VariableDeclarationBlock VariableDeclaration
-| VariableDeclarationBlock EOL
+VariableDeclarationBlock: {}
+| VariableDeclarationBlock VariableDeclaration {swap($1,$$); ($$).push_back($2);}
+| VariableDeclarationBlock EOL {swap($1,$$); }
 ;
 
 Expression: Primary { $$ = $1; } 

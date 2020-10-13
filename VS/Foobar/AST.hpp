@@ -73,7 +73,7 @@ namespace ast
 
 		static unordered_map<string, sp<Type> > TypeTable;
 	};
-	struct Variable : Node
+	struct Variable : Type
 	{
 		sp<Type> type;
 		sp<Ident> ident;
@@ -271,12 +271,13 @@ namespace ast
 	};
 	struct Record : Type
 	{
-		vsp<Type> fields;
-		Record(const string& name, vsp<Type> Fields, int st = 0, int en = 0) :
-			Type(name, st, en) {}
-		//TODO remove
-		Record(string name, int st = 0, int en = 0) :
-			Type(name, st, en) {}
+		vsp<Variable> fields;
+
+		Record(const string& Name, vsp<Variable>& Fields, int st = 0, int en = 0)
+		{
+			name = Name;
+			fields = move(Fields);
+		}
 	};
 
 	struct Alias : Type
