@@ -79,7 +79,7 @@ namespace ast
 			name = Name;
 			start = Start;
 			end = End;
-			this->type = make_shared<Type>(type2);
+			this->type = type2;
 		}
 		Variable() = default;
 		Variable(Variable&&) = default;

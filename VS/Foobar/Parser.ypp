@@ -80,7 +80,7 @@
 %token temp // TODO delete
 
 
-
+%type <sp<ast::Variable> > VariableDeclaration
 %type<sp<ast::Type> > temp // TODO delete
 %type<sp<ast::Type> > type
 %type<sp<ast::BuiltinType> > PrimitiveType
@@ -128,9 +128,18 @@ SimpleDeclaration: VariableDeclaration  {$$ = std::make_shared<ast::Statement>()
 | TypeDeclaration                       {$$ = std::make_shared<ast::Statement>(); /* TODO*/ }
 ;
 
-VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " << $2 << " with type " << ($4)->name << "\n"; }
-| VAR IDENTIFIER IS Expression {std::cout << $2 << " " << ($4)->name << std::endl; /*dfs($4);*/}
-| VAR IDENTIFIER COL type IS Expression {std::cout << $2 << " " << ($6)->name << "\n"; /*dfs($6);*/}
+VariableDeclaration: VAR IDENTIFIER COL type { auto temp = std::make_shared<ast::Variable>($2, 0, 0, $4); }
+| VAR IDENTIFIER IS Expression {
+    auto temp = std::make_shared<ast::Variable>($2, 0, 0, nullptr);
+    temp->value = $4;
+    $$ = temp;
+    /*TODO add expression type func as 4th param*/
+     }
+| VAR IDENTIFIER COL type IS Expression {
+    auto temp = std::make_shared<ast::Variable>($2, 0, 0, $4);
+    temp->value = $6;
+    temp = $$;
+    }
 ;
 
 TypeDeclaration: TKEY IDENTIFIER IS type { std::cout << "defined new type " << $2 << "\n"; }
