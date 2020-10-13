@@ -6,6 +6,8 @@
 #include<utility>
 #include<variant>
 #include<tuple>
+#include<unordered_map>
+#include<iostream>
 
 // TODO read about Visitor Pattern and try to apply it here
 
@@ -25,6 +27,7 @@ namespace ast
 	struct Expression;
 	struct RoutineCall;
 	struct Ident;
+	struct Type;
 }
 
 namespace ast
@@ -68,6 +71,7 @@ namespace ast
 
 		virtual ~Type() = default;
 
+		static unordered_map<string, sp<Type> > TypeTable;
 	};
 	struct Variable : Node
 	{

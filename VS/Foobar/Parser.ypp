@@ -77,11 +77,10 @@
 %token ASN
 %token ITYPE RTYPE BTYPE
 %token EOL
-%token temp // TODO delete
+
 
 
 %type <sp<ast::Variable> > VariableDeclaration
-%type<sp<ast::Type> > temp // TODO delete
 %type<sp<ast::Type> > type
 %type<sp<ast::BuiltinType> > PrimitiveType
 %type<sp<ast::Array> > ArrayType
@@ -100,7 +99,6 @@
 %type <sp<ast::Statement> > Statement
 %type <sp<ast::ReturnStatement> > ReturnStatement /* TODO change the name to correct one */
 %type <sp<ast::Assignment> > Assignment
-%type <sp<ast::Statement> > SimpleDeclaration /* TODO */
 %type <sp<ast::Expression> > VariableAcess
 %type <sp<ast::Expression> > ModifiablePrimary
 %type <sp<ast::RoutineCall> > RoutineCall
@@ -127,10 +125,6 @@ program:
 | program EOL
 ;
 
-SimpleDeclaration: VariableDeclaration  {$$ = std::make_shared<ast::Statement>(); /* TODO*/ }
-| TypeDeclaration                       {$$ = std::make_shared<ast::Statement>(); /* TODO*/ }
-;
-
 VariableDeclaration: VAR IDENTIFIER COL type { auto temp = std::make_shared<ast::Variable>($2, 0, 0, $4); }
 | VAR IDENTIFIER IS Expression {
     auto temp = std::make_shared<ast::Variable>($2, 0, 0, nullptr);
@@ -145,7 +139,7 @@ VariableDeclaration: VAR IDENTIFIER COL type { auto temp = std::make_shared<ast:
     }
 ;
 
-TypeDeclaration: TKEY IDENTIFIER IS type { std::cout << "defined new type " << $2 << "\n"; }
+TypeDeclaration: TKEY IDENTIFIER IS type { ast::Type::TypeTable.insert({$2,$4});}
 ;
 
 RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END { $$ = std::make_shared<ast::Routine>($2, $4, $7, nullptr);}
@@ -178,7 +172,8 @@ ArrayType: ARY LAR Expression RAR type { $$ = std::make_shared<ast::Array>("Arra
 ;
 
 Body: {$$ = std::make_shared<ast::Block>(); /* create an empty body */}
-| Body SimpleDeclaration {($1)->addStatement($2); $$ = $1;};
+| Body VariableDeclaration {($1)->addVariable($2); $$ = $1;};
+| Body TypeDeclaration {}
 | Body Statement {($1)->addStatement($2); $$ = $1;}
 | Body EOL
 ;
