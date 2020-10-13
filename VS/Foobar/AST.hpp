@@ -92,6 +92,7 @@ namespace ast
 		vsp<Variable> variables;
 		vsp<Statement> statemets;
 		vsp<Routine> routines;
+		Program() = default;
 	};
 	struct Block : Node
 	{

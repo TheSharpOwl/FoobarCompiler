@@ -23,7 +23,7 @@
 %code
 {
     // Our program is defined here
-    sp<ast::Program> ourProgram;
+    sp<ast::Program> ourProgram = std::make_shared<ast::Program>();
     
     namespace yy
     {
@@ -118,9 +118,10 @@
 
 
 %%
-program:  /*{ourProgram = std::make_shared<ast::Program>(); std::cout << "made a program\n"; }*/
-| program SimpleDeclaration {/* TODO maybe use this to add the variables to our vars*/ }
-| program RoutineDeclaration {/* TODO use this to add the pointers to our routines*/}
+program:
+| program VariableDeclaration {ourProgram->variables.push_back($2); }
+| program TypeDeclaration {/*TODO make a decision about it*/ }
+| program RoutineDeclaration {ourProgram->routines.push_back($2);}
 | program EOL
 ;
 
