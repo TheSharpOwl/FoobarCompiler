@@ -441,31 +441,34 @@ namespace yy {
       // ReturnStatement
       char dummy10[sizeof (sp<ast::ReturnStatement> )];
 
+      // RoutineDeclaration
+      char dummy11[sizeof (sp<ast::Routine> )];
+
       // RoutineCall
-      char dummy11[sizeof (sp<ast::RoutineCall> )];
+      char dummy12[sizeof (sp<ast::RoutineCall> )];
 
       // SimpleDeclaration
       // Statement
       // WhileLoop
       // ForLoop
       // IfStatement
-      char dummy12[sizeof (sp<ast::Statement> )];
+      char dummy13[sizeof (sp<ast::Statement> )];
 
       // temp
       // type
-      char dummy13[sizeof (sp<ast::Type> )];
+      char dummy14[sizeof (sp<ast::Type> )];
 
       // ParameterDeclaration
-      char dummy14[sizeof (sp<ast::Variable> )];
+      char dummy15[sizeof (sp<ast::Variable> )];
 
       // IDENTIFIER
-      char dummy15[sizeof (std::string)];
+      char dummy16[sizeof (std::string)];
 
       // Arguments
-      char dummy16[sizeof (std::vector<sp<ast::Expression> > )];
+      char dummy17[sizeof (std::vector<sp<ast::Expression> > )];
 
       // Parameters
-      char dummy17[sizeof (std::vector<sp<ast::Variable> > )];
+      char dummy18[sizeof (std::vector<sp<ast::Variable> > )];
     };
 
     /// The size of the largest semantic type.
@@ -735,6 +738,10 @@ namespace yy {
         value.move< sp<ast::ReturnStatement>  > (std::move (that.value));
         break;
 
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.move< sp<ast::Routine>  > (std::move (that.value));
+        break;
+
       case symbol_kind::S_RoutineCall: // RoutineCall
         value.move< sp<ast::RoutineCall>  > (std::move (that.value));
         break;
@@ -899,6 +906,17 @@ namespace yy {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Routine> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Routine> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, sp<ast::RoutineCall> && v)
         : Base (t)
         , value (std::move (v))
@@ -1040,6 +1058,10 @@ switch (yykind)
 
       case symbol_kind::S_ReturnStatement: // ReturnStatement
         value.template destroy< sp<ast::ReturnStatement>  > ();
+        break;
+
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.template destroy< sp<ast::Routine>  > ();
         break;
 
       case symbol_kind::S_RoutineCall: // RoutineCall
@@ -2487,6 +2509,10 @@ switch (yykind)
         value.copy< sp<ast::ReturnStatement>  > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.copy< sp<ast::Routine>  > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_RoutineCall: // RoutineCall
         value.copy< sp<ast::RoutineCall>  > (YY_MOVE (that.value));
         break;
@@ -2593,6 +2619,10 @@ switch (yykind)
         value.move< sp<ast::ReturnStatement>  > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.move< sp<ast::Routine>  > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_RoutineCall: // RoutineCall
         value.move< sp<ast::RoutineCall>  > (YY_MOVE (s.value));
         break;
@@ -2687,7 +2717,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2691 "parser.tab.hpp"
+#line 2721 "parser.tab.hpp"
 
 
 

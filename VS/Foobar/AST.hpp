@@ -14,7 +14,6 @@ namespace ast
 	struct Node;
 	struct Block;
 	struct Routine;
-	struct Variable;
 	struct Statement;
 	struct ReturnStatement;
 	struct WhileLoop;
@@ -23,7 +22,6 @@ namespace ast
 	struct Decleration;
 	struct Assignment;
 	struct Expression;
-	struct Type;
 	struct RoutineCall;
 	struct Ident;
 }
@@ -47,6 +45,47 @@ namespace ast
 
 		virtual ~Node() = default;
 
+	};
+	struct Type : Node
+	{
+		Type(sp<Node> node)
+		{
+			name = node->name;
+			start = node->start;
+			end = node->end;
+		}
+		Type(const std::string& otherName, int st = 0, int en = 0)
+		{
+			start = end = 0; //TODO change after adding the char count system
+			name = otherName;
+		}
+		Type() = default;
+		Type(Type&&) = default;
+		Type(Type&) = default;
+		Type& operator= (const Type& other) = default;
+		Type& operator= (Type&&) = default;
+
+		virtual ~Type() = default;
+
+	};
+	struct Variable : Node
+	{
+		sp<Type> type;
+		sp<Ident> ident;
+		sp<Expression> value = nullptr;
+
+		Variable(const string& Name, int Start, int End, sp<Type> type2)
+		{
+			name = Name;
+			start = Start;
+			end = End;
+			this->type = make_shared<Type>(type2);
+		}
+		Variable() = default;
+		Variable(Variable&&) = default;
+		Variable(Variable&) = default;
+		Variable& operator= (const Variable&) = default;
+		Variable& operator= (Variable&&) = default;
 	};
 	struct Program : Node
 	{
@@ -78,29 +117,32 @@ namespace ast
 		vsp <Variable> parameters;
 		sp<Type> returnType;
 		vsp<ReturnStatement> returnStatements;
+		Routine() = default;
+		Routine(const string& name, vsp<Variable> params, sp<Block> oBody, sp<Type> rtType) :
+			Node(name)
+		{
+			parameters = (params);
+			body = oBody;
+			returnType = rtType;
+		}
+		void print() 
+		{
+			cout << "Routine " << name << " with type : ";
+			if (returnType != nullptr)
+				cout << returnType->name;
+			else
+				cout << "void";
+			cout << endl;
+			cout << "vector size : ";
+			cout << parameters.size() << endl;
+			for (auto a : parameters)
+				cout << a->name << " " << a->type->name << endl;
 
+		}
 		//TODO function to store the returnStatements inside the vector
 		//TODO function to check valid return statements
 	};
-	struct Variable : Node
-	{
-		sp<Type> type;
-		sp<Ident> ident;
-		sp<Expression> value = nullptr;
 
-		Variable(const string& Name, int Start, int End, sp<Type> type2)
-		{
-			name = Name;
-			start = Start;
-			end = End;
-			this->type = make_shared<Type>(type2);
-		}
-		Variable() = default;
-		Variable(Variable&&) = default;
-		Variable(Variable&) = default;
-		Variable& operator= (const Variable&) = default;
-		Variable& operator= (Variable&&) = default;
-	};
 
 	struct Statement : Node
 	{
@@ -200,28 +242,6 @@ namespace ast
 	struct RoutineCall : Statement
 	{
 		vsp<Expression> args;
-
-	};
-	struct Type : Node
-	{
-		Type(sp<Node> node)
-		{
-			name = node->name;
-			start = node->start;
-			end = node->end;
-		}
-		Type(const std::string& otherName, int st = 0, int en = 0)
-		{
-			start = end = 0; //TODO change after adding the char count system
-			name = otherName;
-		}
-		Type() = default;
-		Type(Type&&) = default;
-		Type(Type&) = default;
-		Type& operator= (const Type & other) = default;
-		Type& operator= (Type&&) = default;
-
-		virtual ~Type() = default;
 
 	};
 	struct BuiltinType : Type

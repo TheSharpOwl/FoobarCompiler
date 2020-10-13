@@ -92,7 +92,7 @@
 %type <double> REAL
 %type <int> INTEGER
 %type <bool> TRU FLS
-
+%type <sp<ast::Routine> > RoutineDeclaration 
 %type <sp<ast::Block> > Body
 %type <sp<ast::Statement> > IfStatement /*TODO*/
 %type <sp<ast::Statement> > WhileLoop/*TODO*/
@@ -136,15 +136,15 @@ VariableDeclaration: VAR IDENTIFIER COL type { std::cout << "defined variable " 
 TypeDeclaration: TKEY IDENTIFIER IS type { std::cout << "defined new type " << $2 << "\n"; }
 ;
 
-RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END { std::cout << "routine " << $2 << " was declared\n";/* TODO add parameters*/ }
-| RUT IDENTIFIER LBR Parameters RBR COL type IS Body END {  std::cout << "routine " << $2 << " was declared\n";  /*TODO add parameters */}
+RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END { $$ = std::make_shared<ast::Routine>($2, $4, $7, nullptr);}
+| RUT IDENTIFIER LBR Parameters RBR COL type IS Body END {  $$ = std::make_shared<ast::Routine>($2, $4, $9, $7);}
 ;
 
-Parameters: ParameterDeclaration {($$).push_back($1); /* will be emptied when we go back to the routine */}
-| Parameters COM ParameterDeclaration {($$).push_back($3);}
+Parameters: ParameterDeclaration {($$).push_back($1); }
+| Parameters COM ParameterDeclaration {swap($1, $$);  ($$).push_back($3);}
 ;
 
-ParameterDeclaration: IDENTIFIER COL type {$$ = std::make_shared<ast::Variable>($1, 0,0,$3);}
+ParameterDeclaration: IDENTIFIER COL type {$$ = std::make_shared<ast::Variable>($1, 0, 0, $3);}
 ;
 
 type: IDENTIFIER {$$ = std::make_shared<ast::Type>($1);}
@@ -186,7 +186,7 @@ ReturnStatement: RTN EOL {   $$ = std::make_shared<ast::ReturnStatement>(nullptr
 Assignment: ModifiablePrimary ASN Expression {$$ = std::make_shared<ast::Assignment>(std::get<0>(($1)->value), $3);}
 ;
 
-RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>(); /*TODO delete*/ ($$)->args = std::move($3); for(auto a : ($$)->args) a->print();}
+RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>(); ($$)->args = std::move($3);}
 ;
 
 WhileLoop: WHL Expression LOP Body END { $$ = std::make_shared<ast::WhileLoop>(); /*TODO*/}
