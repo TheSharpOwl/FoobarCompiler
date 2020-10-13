@@ -19,6 +19,7 @@ yy::parser::symbol_type Scanner::get_next_token()
         c = reader.next_character();
     }
     if (c == '\n') {
+        ast::line++;
         return yy::parser::make_EOL();
     }
     if (c == EOF) {

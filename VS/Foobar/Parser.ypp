@@ -7,21 +7,22 @@
 
 %code requires
 {
+    #pragma once
     #include <iostream>
     #include <string>
     #include "AST.hpp"
-
+    
     // forward decleration
     namespace yy
     {
         class parser;
     }
     template <typename T> using sp = std::shared_ptr<T>;
-
 }
 
 %code
 {
+
     // Our program is defined here
     sp<ast::Program> ourProgram = std::make_shared<ast::Program>();
     

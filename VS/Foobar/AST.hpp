@@ -38,6 +38,8 @@ namespace ast
 	template <typename T> using sp = shared_ptr<T>;
 	template <typename T> using vsp = vector<shared_ptr<T>>;
 
+	extern int line;
+
 	struct Node
 	{
 		string name;
