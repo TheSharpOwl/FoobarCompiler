@@ -11,8 +11,6 @@ int main()
     scanner.set_file("inp.txt");
     yy::parser p;
 	p.parse();
-    sp<ast::Type> temp = std::make_shared<ast::BuiltinType>("integer");
-    std::cout << temp->name << std::endl;
 
     return 0;
 }

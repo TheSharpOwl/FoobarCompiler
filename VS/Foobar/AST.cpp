@@ -17,4 +17,9 @@ namespace ast
 		statemets.push_back(s);
 		end = max(s->end, end);
 	}
+
+	void dfs()
+	{
+
+	}
 }

@@ -285,6 +285,8 @@ namespace ast
 			Type(name){}
 		// TODO figure out how to store the values (I think I did already)
 	};
+
+	void dfs();
 }
 
 // TODO : make sure type aliases can only be defined in the outside program and handle it.

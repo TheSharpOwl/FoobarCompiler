@@ -33,7 +33,6 @@
     void showExpr(const std::string& first, const std::string& op, const std::string& second)
     {
         std::cout<< first << op << second <<"\n";
-        std::cout << "I am inside\n";
     }
 
     // TODO get rid of this function later + all its calls (it is just to print the results and make sure it works fine)
@@ -234,8 +233,8 @@ Expression: Primary { $$ = $1; }
 | LBR Expression RBR { $$ = $2;}
 ;
 
-Arguments: Expression {($$).push_back($1); std::cout << ($$).size() << "\n";}
-| Arguments COM Expression {swap($$,$1); ($$).push_back($3); std::cout << ($$).size() << "\n";}
+Arguments: Expression {($$).push_back($1);}
+| Arguments COM Expression {swap($$,$1); ($$).push_back($3);}
 ;
 
 Primary: INTEGER {                      $$ = std::make_shared<ast::Expression>($1, false); }
