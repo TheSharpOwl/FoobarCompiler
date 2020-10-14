@@ -47,7 +47,7 @@ namespace ast
 
 		Node() = default;
 		Node(const string& s) : 
-			name(s) {}
+			name(s), start(ast::line) {}
 
 		virtual ~Node() = default;
 
@@ -60,11 +60,8 @@ namespace ast
 			start = node->start;
 			end = node->end;
 		}
-		Type(const std::string& otherName, int st = 0, int en = 0)
-		{
-			start = end = 0; //TODO change after adding the char count system
-			name = otherName;
-		}
+		Type(const std::string& otherName) :
+		 Node(otherName) {}
 		Type() = default;
 		Type(Type&&) = default;
 		Type(Type&) = default;
@@ -81,41 +78,31 @@ namespace ast
 		sp<Ident> ident;
 		sp<Expression> value = nullptr;
 
-		Variable(const string& Name, int Start, int End, sp<Type> type2)
+		Variable(const string& Name, sp<Type> type2) :
+		 Type(Name)
 		{
-			name = Name;
-			start = Start;
-			end = End;
 			this->type = type2;
 		}
 		Variable() = default;
-		Variable(Variable&&) = default;
-		Variable(Variable&) = default;
-		Variable& operator= (const Variable&) = default;
-		Variable& operator= (Variable&&) = default;
 	};
 	struct Program : Node
 	{
 		vsp<Variable> variables;
 		vsp<Statement> statemets;
 		vsp<Routine> routines;
+
+		Program() {start = ast::line;}
 	};
 	struct Block : Node
 	{
 		vsp<Variable> variables;
 		vsp<Statement> statemets;
 
-		Block() = default;
+		Block() { start = end = ast::line; }
 		~Block() = default;
 
-		void addVariable(sp<Variable> v)
-		{
-			variables.push_back(v);
-		}
-		void addStatement(sp<Statement> s)
-		{
-			statemets.push_back(s);
-		}
+		void addVariable(sp<Variable> v);
+		void addStatement(sp<Statement> s);
 
 	};
 	struct Routine : Node
@@ -131,6 +118,7 @@ namespace ast
 			parameters = (params);
 			body = oBody;
 			returnType = rtType;
+			end = oBody->end;
 		}
 		void print() 
 		{
@@ -159,7 +147,7 @@ namespace ast
 	{
 		sp<Expression> returned = nullptr;
 		ReturnStatement(sp<Expression> exp)
-		{returned = exp; }
+		{returned = exp; start = end = ast::line;}
 		ReturnStatement() = default;
 	};
 	struct WhileLoop : Statement
@@ -168,6 +156,7 @@ namespace ast
 		sp<Block> body;
 		WhileLoop(sp<Expression> Cond, sp<Block> Body)
 		{
+			start = ast::line;
 			condition = Cond;
 			body = Body;
 		}
@@ -179,7 +168,7 @@ namespace ast
 		sp<Block> elseBody;
 
 		IfStatement(sp<Expression> exp, sp<Block> block, sp<Block> elseBlock) :
-			condition(exp), body(block), elseBody(elseBlock) {}
+			condition(exp), body(block), elseBody(elseBlock) {start = ast::line;}
 	};
 	struct ForLoop : Statement
 	{
@@ -192,7 +181,8 @@ namespace ast
 			 rangeStart(get<0>(Range)), rangeEnd(get<1>(Range)), reversed(get<2>(Range)), body(Body)
 		{
 			// TODO replace nullptr with ast::Expression::getType()
-			loopVar = make_shared<Variable>(LoopVar, start, end, nullptr); 
+			loopVar = make_shared<Variable>(LoopVar, nullptr); 
+			start = ast::line;
 		}
 		ForLoop() = default;
 	};
@@ -212,6 +202,7 @@ namespace ast
 		Assignment(const string& identName, sp<Expression> exp) :
 			rValue(exp) 
 		{
+			start = ast::line;
 			lValue = make_shared<Ident>(identName);
 		}
 	};
@@ -235,6 +226,7 @@ namespace ast
 			value = newSymbol;
 			l = first;
 			r = second;
+			
 		}
 		Expression(int val, bool temp) : Node("INTEGER"), value(val) {}
 		Expression(bool val) :   Node("BOOLEAN"), value(val){}
@@ -265,9 +257,8 @@ namespace ast
 	{
 		variant<long long int, double, bool> iValue, rValue, bValue;
 		// TODO add a way to change the value
-		BuiltinType(const string& otherName, int st = 0, int en = 0) : Type(otherName, st, en)
+		BuiltinType(const string& otherName) : Type(otherName)
 		{
-			start = end = 0; //TODO change after adding the char count system
 			name = otherName;
 		}
 	};
@@ -275,9 +266,8 @@ namespace ast
 	{
 		vsp<Variable> fields;
 
-		Record(const string& Name, vsp<Variable>& Fields, int st = 0, int en = 0)
+		Record(const string& Name, vsp<Variable>& Fields) : Type(Name)
 		{
-			name = Name;
 			fields = move(Fields);
 		}
 	};
@@ -291,8 +281,8 @@ namespace ast
 	{
 		int size = 0;
 		sp<Type> type;
-		Array(const std::string& name, int st = 0, int ed = 0) :
-			Type(name, st, ed){}
+		Array(const std::string& name) :
+			Type(name){}
 		// TODO figure out how to store the values (I think I did already)
 	};
 }

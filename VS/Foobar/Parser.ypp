@@ -1,4 +1,3 @@
-
 %require "3.2"
 %language "C++"
 %define api.value.type variant
@@ -126,15 +125,15 @@ program:
 | program EOL
 ;
 
-VariableDeclaration: VAR IDENTIFIER COL type { auto temp = std::make_shared<ast::Variable>($2, 0, 0, $4); }
+VariableDeclaration: VAR IDENTIFIER COL type { auto temp = std::make_shared<ast::Variable>($2, $4); }
 | VAR IDENTIFIER IS Expression {
-    auto temp = std::make_shared<ast::Variable>($2, 0, 0, nullptr);
+    auto temp = std::make_shared<ast::Variable>($2, nullptr);
     temp->value = $4;
     $$ = temp;
     /*TODO add expression type func as 4th param*/
      }
 | VAR IDENTIFIER COL type IS Expression {
-    auto temp = std::make_shared<ast::Variable>($2, 0, 0, $4);
+    auto temp = std::make_shared<ast::Variable>($2, $4);
     temp->value = $6;
     temp = $$;
     }
@@ -151,7 +150,7 @@ Parameters: ParameterDeclaration {($$).push_back($1); }
 | Parameters COM ParameterDeclaration {swap($1, $$);  ($$).push_back($3);}
 ;
 
-ParameterDeclaration: IDENTIFIER COL type {$$ = std::make_shared<ast::Variable>($1, 0, 0, $3);}
+ParameterDeclaration: IDENTIFIER COL type {$$ = std::make_shared<ast::Variable>($1, $3);}
 ;
 
 type: IDENTIFIER {$$ = std::make_shared<ast::Type>($1);}
@@ -174,7 +173,7 @@ ArrayType: ARY LAR Expression RAR type { $$ = std::make_shared<ast::Array>("Arra
 
 Body: {$$ = std::make_shared<ast::Block>(); /* create an empty body */}
 | Body VariableDeclaration {($1)->addVariable($2); $$ = $1;};
-| Body TypeDeclaration {}
+| Body TypeDeclaration {/*automatically added to the type table*/}
 | Body Statement {($1)->addStatement($2); $$ = $1;}
 | Body EOL
 ;
