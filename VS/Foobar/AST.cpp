@@ -17,7 +17,39 @@ namespace ast
 		statemets.push_back(s);
 		end = max(s->end, end);
 	}
+	std::string Expression::getType(shared_ptr<Expression> exp)
+	{
+		if (exp == nullptr)
+			return "";
+		if (exp->l == nullptr && exp->l == nullptr) // this means it is a number or an identifer
+		{
+			std::string temp;
+			switch (exp->value.index())
+			{
+			case 0: temp = "ident"; break;
+			case 1: temp = "int"; break;
+			case 2: temp = "double"; break;
+			case 3: temp = "bool"; break;
+			}
+			if (temp == "ident")
+				return Type::TypeTable[std::get<0>(exp->value)]->name;
+			else
+				return temp;
+		}
+		else if (exp->l == nullptr)
+			return getType(exp->l);
+		else if(exp->r == nullptr)
+			return getType(exp->r);
+		std::string left = getType(exp->l);
+		std::string right = getType(exp->r);
+		if (left == "double" || right == "double")
+			return "double";
+		else if (left == "int" || right == "int")
+			return "int";
+		else
+			return "bool";
 
+	}
 	void dfs()
 	{
 		sort(ourProgram->variables.begin(), ourProgram->variables.end(),
@@ -28,11 +60,12 @@ namespace ast
 		std::cout << "ourProgram contains:\nvariables:\n";
 		for (auto v : ourProgram->variables)
 		{
-			std::cout << v->name << "\n";
+			std::string x = v->name + "has value"; // TODO important
+			std::cout << v->name << " ";
 			if (v->value == nullptr)
-				continue;
-			std::cout << "has value\n";
-
+				std::cout << "(no value yet)\n";
+			else
+				std::cout << "has value of type " << Expression::getType(v->value) << "\n";
 		}
 		std::cout << "Routines:\n";
 		for (auto r : ourProgram->routines)

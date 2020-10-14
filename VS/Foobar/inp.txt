@@ -1,4 +1,4 @@
-var a is 5
+var a is true + 5
 
 var b : integer
 

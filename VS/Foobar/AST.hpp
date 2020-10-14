@@ -83,6 +83,15 @@ namespace ast
 		{
 			this->type = type2;
 		}
+		Variable(const string& Name, sp<Expression> exp, sp<Type> type2) :
+			Type(Name)
+		{
+			value = exp;
+			// TODO
+			
+			type = type2;
+			//type = Expression::getType(exp);
+		}
 		Variable() = default;
 	};
 	struct Program : Node
@@ -220,13 +229,13 @@ namespace ast
 		variant<string, long long int, double, bool> value;
 		spe l = nullptr;
 		spe r = nullptr;
+		static std::string getType(shared_ptr<Expression> exp);
 		// TODO implement function which returns Type of the expression
 		Expression(const string& newSymbol, spe first, spe second = nullptr, bool braces = false) : Node("Operation")
 		{
 			value = newSymbol;
 			l = first;
 			r = second;
-			
 		}
 		Expression(long long int val, bool temp) : Node("INTEGER"), value(val) {}
 		Expression(bool val) :   Node("BOOLEAN"), value(val){}
@@ -241,10 +250,10 @@ namespace ast
 		{
 			switch (value.index())
 			{
-			case 0: std::cout << get<0>(value) << std::endl; break;
-			case 1: std::cout << get<1>(value) << std::endl; break;
-			case 2: std::cout << get<2>(value) << std::endl; break;
-			case 3: std::cout << get<3>(value) << std::endl; break;
+				case 0: std::cout << get<0>(value) << std::endl; break;
+				case 1: std::cout << get<1>(value) << std::endl; break;
+				case 2: std::cout << get<2>(value) << std::endl; break;
+				case 3: std::cout << get<3>(value) << std::endl; break;
 			}
 		}
 	};

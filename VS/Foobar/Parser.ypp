@@ -126,7 +126,7 @@ program:
 
 VariableDeclaration: VAR IDENTIFIER COL type { $$ = std::make_shared<ast::Variable>($2, $4); }
 | VAR IDENTIFIER IS Expression {
-    auto temp = std::make_shared<ast::Variable>($2, nullptr);
+    auto temp = std::make_shared<ast::Variable>($2, $4, nullptr);
     temp->value = $4;
     $$ = temp;
     /*TODO add expression type func as 4th param*/
