@@ -87,7 +87,6 @@ namespace ast
 			Type(Name)
 		{
 			value = exp;
-			// TODO
 			
 			type = type2;
 			//type = Expression::getType(exp);
@@ -143,8 +142,6 @@ namespace ast
 				cout << a->name << " " << a->type->name << endl;
 
 		}
-		//TODO function to store the returnStatements inside the vector
-		//TODO function to check valid return statements
 	};
 
 
@@ -189,7 +186,6 @@ namespace ast
 		ForLoop(const string& LoopVar, tuple<sp<ast::Expression>, sp<ast::Expression>, bool> Range, sp<Block> Body) :
 			 rangeStart(get<0>(Range)), rangeEnd(get<1>(Range)), reversed(get<2>(Range)), body(Body)
 		{
-			// TODO replace nullptr with ast::Expression::getType()
 			loopVar = make_shared<Variable>(LoopVar, nullptr); 
 			start = ast::line;
 		}
@@ -199,15 +195,12 @@ namespace ast
 	struct Decleration : Statement
 	{
 		sp<Type> type;
-		// TODO function to create a variable
 	};
 
 	struct Assignment : Statement
 	{
 		sp<Expression> rValue;
 		sp<Ident> lValue;
-		// TODO function to check if lValue is a valid Ident
-		// TODO function to check if the rValue is valid (use the expression type determiner function)
 		Assignment(const string& identName, sp<Expression> exp) :
 			rValue(exp) 
 		{
@@ -230,7 +223,6 @@ namespace ast
 		spe l = nullptr;
 		spe r = nullptr;
 		static std::string getType(shared_ptr<Expression> exp);
-		// TODO implement function which returns Type of the expression
 		Expression(const string& newSymbol, spe first, spe second = nullptr, bool braces = false) : Node("Operation")
 		{
 			value = newSymbol;
@@ -268,7 +260,6 @@ namespace ast
 	struct BuiltinType : Type
 	{
 		variant<long long int, double, bool> iValue, rValue, bValue;
-		// TODO add a way to change the value
 		BuiltinType(const string& otherName) : Type(otherName)
 		{
 			name = otherName;
@@ -295,11 +286,9 @@ namespace ast
 		sp<Type> type;
 		Array(const std::string& name) :
 			Type(name){}
-		// TODO figure out how to store the values (I think I did already)
 	};
 
 	void dfs();
 	void printVariable(sp<Variable> var);
 }
 
-// TODO : make sure type aliases can only be defined in the outside program and handle it.
