@@ -1,0 +1,271 @@
+%require "3.2"
+%language "C++"
+%define api.value.type variant
+%define api.token.constructor
+%define parse.assert
+
+%code requires
+{
+    #pragma once
+    #include <iostream>
+    #include <string>
+    #include "AST.hpp"
+    
+    // forward decleration
+    namespace yy
+    {
+        class parser;
+    }
+    template <typename T> using sp = std::shared_ptr<T>;
+}
+
+%code
+{
+
+    // Our program is defined here
+    sp<ast::Program> ourProgram = std::make_shared<ast::Program>();
+    
+    namespace yy
+    {
+        parser::symbol_type yylex();
+        // no need to override the error function because it is already waiting for our implementation
+    }
+    void showExpr(const std::string& first, const std::string& op, const std::string& second)
+    {
+        std::cout<< first << op << second <<"\n";
+    }
+
+    // TODO get rid of this function later + all its calls (it is just to print the results and make sure it works fine)
+    void dfs(sp<ast::Expression> exp)
+    {
+        if(exp == nullptr)
+        {
+            std::cout << "empty\n";
+            return;
+        }
+        std::cout << "node is :";
+        exp->print();
+        std::cout << "\ngo left\n";
+        dfs(exp->l);
+        std::cout << "go right\n";
+        dfs(exp->r);
+        std::cout << "go back\n";
+    }
+}
+
+/* declare tokens */
+%token IDENTIFIER
+%token INTEGER REAL
+%token ADD SUB MUL DIV MOD
+%token GRT GRTE LES LESE EQ NEQ
+%token AND OR XOR
+%token IF THEN ELSE
+%token TRU FLS
+%token VAR COL
+%token TKEY
+%token RUT
+%token LBR RBR
+%token COM
+%token RTN IS
+%token RNG IN REV
+%token FOR WHL LOP
+%token END
+%token RCRD
+%token ARY LAR RAR
+%token DOTN
+%token ASN
+%token ITYPE RTYPE BTYPE
+%token EOL
+
+
+
+%type <sp<ast::Variable> > VariableDeclaration
+%type<sp<ast::Type> > type
+%type<sp<ast::BuiltinType> > PrimitiveType
+%type<sp<ast::Array> > ArrayType
+%type<sp<ast::Record> > RecordType
+%type<sp<ast::Expression> > Expression
+%type<sp<ast::Expression> > Primary
+%type <std::string>  IDENTIFIER
+%type <double> REAL
+%type <int> INTEGER
+%type <bool> TRU FLS
+%type <sp<ast::Routine> > RoutineDeclaration 
+%type <sp<ast::Block> > Body
+%type <sp<ast::Statement> > IfStatement /*TODO*/
+%type <sp<ast::Statement> > WhileLoop/*TODO*/
+%type <sp<ast::Statement> > ForLoop/*TODO*/
+%type <sp<ast::Statement> > Statement
+%type <sp<ast::ReturnStatement> > ReturnStatement /* TODO change the name to correct one */
+%type <sp<ast::Assignment> > Assignment
+%type <sp<ast::Expression> > VariableAcess
+%type <sp<ast::Expression> > ModifiablePrimary
+%type <sp<ast::RoutineCall> > RoutineCall
+%type <std::vector<sp<ast::Expression> > > Arguments
+%type <sp<ast::Variable> > ParameterDeclaration
+%type <std::vector<sp<ast::Variable> > > Parameters
+%type <std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool> > Range
+%type <std::vector<sp<ast::Variable> > > VariableDeclarationBlock
+
+%left OR
+%left XOR
+%left AND
+%left EQ NEQ
+%left GRT GRTE LES LESE
+%left ADD SUB
+%left MUL DIV MOD
+
+
+%%
+program:
+| program VariableDeclaration {ourProgram->variables.push_back($2); }
+| program TypeDeclaration {}
+| program RoutineDeclaration {ourProgram->routines.push_back($2);}
+| program EOL
+;
+
+VariableDeclaration: VAR IDENTIFIER COL type { $$ = std::make_shared<ast::Variable>($2, $4); }
+| VAR IDENTIFIER IS Expression {
+    ast::Type::TypeTable[$2] = std::make_shared<ast::Type>(ast::Expression::getType($4));
+    auto temp = std::make_shared<ast::Variable>($2, $4, ast::Type::TypeTable[$2]);
+    $$ = temp;
+     }
+| VAR IDENTIFIER COL type IS Expression {
+    auto temp = std::make_shared<ast::Variable>($2, $4);
+    temp->value = $6;
+    $$ = temp;
+    }
+;
+
+TypeDeclaration: TKEY IDENTIFIER IS type { ast::Type::TypeTable.insert({$2,$4});}
+;
+
+RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END { $$ = std::make_shared<ast::Routine>($2, $4, $7, nullptr);}
+| RUT IDENTIFIER LBR Parameters RBR COL type IS Body END {  $$ = std::make_shared<ast::Routine>($2, $4, $9, $7); 
+ast::Type::TypeTable[$2] = $7;}
+;
+
+Parameters: ParameterDeclaration {($$).push_back($1); }
+| Parameters COM ParameterDeclaration {swap($1, $$);  ($$).push_back($3);}
+;
+
+ParameterDeclaration: IDENTIFIER COL type {$$ = std::make_shared<ast::Variable>($1, $3);}
+;
+
+type: IDENTIFIER {$$ = std::make_shared<ast::Type>($1);}
+| PrimitiveType {$$ = $1; /* casting from derived to base !!*/}
+| ArrayType {$$ = $1; /* casting from derived to base !!*/}
+| RecordType {$$ = $1; /* casting from derived to base !!*/}
+;
+
+PrimitiveType: ITYPE { $$ = std::make_shared<ast::BuiltinType>("integer");}
+| RTYPE {              $$ =  std::make_shared<ast::BuiltinType> ("real"); }
+| BTYPE {              $$ =  std::make_shared<ast::BuiltinType> ("boolean"); }
+;
+
+RecordType: RCRD VariableDeclarationBlock END {  $$ = std::make_shared<ast::Record>("Record", $2); }
+;
+
+ArrayType: ARY LAR Expression RAR type { $$ = std::make_shared<ast::Array>("Array");}
+| ARY LAR RAR type {                     $$ = std::make_shared<ast::Array>("Array");}
+;
+
+Body: {$$ = std::make_shared<ast::Block>(); /* create an empty body */}
+| Body VariableDeclaration {($1)->addVariable($2); $$ = $1;};
+| Body TypeDeclaration {/*automatically added to the type table*/}
+| Body Statement {($1)->addStatement($2); $$ = $1;}
+| Body EOL
+;
+
+Statement: Assignment   {$$ = $1;}
+| RoutineCall           {$$ = $1;}
+| WhileLoop             {$$ = $1;}
+| ForLoop               {$$ = $1;}
+| IfStatement           {$$ = $1;}
+| ReturnStatement        {$$ = $1;}
+;
+
+ReturnStatement: RTN EOL {   $$ = std::make_shared<ast::ReturnStatement>(nullptr);}
+| RTN Expression {          $$ = std::make_shared<ast::ReturnStatement>($2);}
+;
+
+Assignment: ModifiablePrimary ASN Expression {$$ = std::make_shared<ast::Assignment>(std::get<0>(($1)->value), $3);}
+;
+
+RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>($1); ($$)->args = std::move($3);}
+;
+
+WhileLoop: WHL Expression LOP Body END { $$ = std::make_shared<ast::WhileLoop>($2, $4);}
+;
+
+ForLoop: FOR IDENTIFIER Range LOP Body END {$$ = std::make_shared<ast::ForLoop>($2, $3, $5);}
+;
+
+Range: IN Expression RNG Expression {$$ = std::make_tuple($2,$4, false); }
+| IN REV Expression RNG Expression {$$ = std::make_tuple($3,$5, true); }
+;
+
+IfStatement: IF Expression THEN Body END {  $$ = std::make_shared<ast::IfStatement>($2, $4, nullptr); }
+| IF Expression THEN Body EOL ELSE Body END { $$ = std::make_shared<ast::IfStatement>($2, $4, $7); }
+;
+
+VariableDeclarationBlock: {}
+| VariableDeclarationBlock VariableDeclaration {swap($1,$$); ($$).push_back($2);}
+| VariableDeclarationBlock EOL {swap($1,$$); }
+;
+
+Expression: Primary { $$ = $1; } 
+| Expression ADD Expression {           $$ = std::make_shared<ast::Expression>("+", $1, $3); }
+| Expression SUB Expression  {          $$ = std::make_shared<ast::Expression>("-", $1, $3); }
+| Expression DIV Expression {           $$ = std::make_shared<ast::Expression>("/", $1, $3); }
+| Expression MUL Expression {           $$ = std::make_shared<ast::Expression>("*", $1, $3); }
+| Expression MOD Expression {           $$ = std::make_shared<ast::Expression>("%", $1, $3); }
+| Expression GRT Expression {           $$ = std::make_shared<ast::Expression>(">", $1, $3); }
+| Expression GRTE Expression {          $$ = std::make_shared<ast::Expression>(">=", $1, $3); }
+| Expression LES Expression {           $$ = std::make_shared<ast::Expression>("<", $1, $3); }
+| Expression LESE Expression {          $$ = std::make_shared<ast::Expression>("<=", $1, $3); }
+| Expression EQ Expression {            $$ = std::make_shared<ast::Expression>("=", $1, $3); }
+| Expression NEQ Expression {           $$ = std::make_shared<ast::Expression>("/=", $1, $3); }
+| Expression AND Expression {           $$ = std::make_shared<ast::Expression>("and", $1, $3); }
+| Expression OR Expression {            $$ = std::make_shared<ast::Expression>("or", $1, $3); }
+| Expression XOR Expression {           $$ = std::make_shared<ast::Expression>("xor", $1, $3); }
+| SUB Expression { sp<ast::Expression> temp = std::make_shared<ast::Expression>(-1, false); $$ = std::make_shared<ast::Expression>("*", temp, $2); }
+| LBR Expression RBR { $$ = $2;}
+;
+
+Arguments: Expression {($$).push_back($1);}
+| Arguments COM Expression {swap($$,$1); ($$).push_back($3);}
+;
+
+Primary: INTEGER {                      $$ = std::make_shared<ast::Expression>($1, false); }
+| REAL {                                $$ = std::make_shared<ast::Expression>($1); }
+| TRU {                                 $$ = std::make_shared<ast::Expression>($1); }
+| FLS {                                 $$ = std::make_shared<ast::Expression>($1); }
+| ModifiablePrimary{    $$ = $1; }
+| RoutineCall {$$ = std::make_shared<ast::Expression>(($1)->name);}
+;
+
+VariableAcess: {$$ = nullptr;}
+| VariableAcess DOTN IDENTIFIER     {sp<ast::Expression> temp = std::make_shared<ast::Expression>($3);
+                                            $$ = std::make_shared<ast::Expression>(".",temp, $1);}
+| VariableAcess LAR Expression RAR  {$$ = std::make_shared<ast::Expression>(".",$3, $1, true);}
+;
+
+ModifiablePrimary: IDENTIFIER VariableAcess {
+                                            sp<ast::Expression> temp = std::make_shared<ast::Expression>($1);
+                                            if($2 != nullptr)
+                                                $$ = std::make_shared<ast::Expression>(".",temp, $2);
+                                            else
+                                                $$ = temp;
+                                            }
+;
+%%
+namespace yy
+{
+    //overriding yylex in main.cpp
+
+    void parser::error(const std::string& msg)
+    {
+        std::cout<<"syntax error!\n";
+    }
+}

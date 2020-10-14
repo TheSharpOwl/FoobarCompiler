@@ -1,0 +1,12 @@
+var a is true + 5
+var b : integer
+
+routine power(number : int, to_power : int) : int is
+	var tmp is 1
+	var x is 2
+	var y is x * tmp
+	return y
+end
+
+var c : integer is power(x, y)
+
