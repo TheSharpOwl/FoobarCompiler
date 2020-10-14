@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AST.cpp" />
     <ClCompile Include="Foobar.cpp" />
     <ClCompile Include="parser.tab.cpp" />
     <ClCompile Include="Reader.cpp" />

@@ -124,7 +124,7 @@ program:
 | program EOL
 ;
 
-VariableDeclaration: VAR IDENTIFIER COL type { auto temp = std::make_shared<ast::Variable>($2, $4); }
+VariableDeclaration: VAR IDENTIFIER COL type { $$ = std::make_shared<ast::Variable>($2, $4); }
 | VAR IDENTIFIER IS Expression {
     auto temp = std::make_shared<ast::Variable>($2, nullptr);
     temp->value = $4;
@@ -134,7 +134,7 @@ VariableDeclaration: VAR IDENTIFIER COL type { auto temp = std::make_shared<ast:
 | VAR IDENTIFIER COL type IS Expression {
     auto temp = std::make_shared<ast::Variable>($2, $4);
     temp->value = $6;
-    temp = $$;
+    $$ = temp;
     }
 ;
 

@@ -8,7 +8,7 @@
 #include<tuple>
 #include<unordered_map>
 #include<iostream>
-
+#include<algorithm>
 // TODO read about Visitor Pattern and try to apply it here
 
 // forward declerations 
@@ -228,7 +228,7 @@ namespace ast
 			r = second;
 			
 		}
-		Expression(int val, bool temp) : Node("INTEGER"), value(val) {}
+		Expression(long long int val, bool temp) : Node("INTEGER"), value(val) {}
 		Expression(bool val) :   Node("BOOLEAN"), value(val){}
 		Expression(double val) : Node("REAL"), value(val){}
 		Expression(const string& identName) :

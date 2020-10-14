@@ -3,7 +3,7 @@
 std::unordered_map<std::string, std::shared_ptr<ast::Type> > ast::Type::TypeTable = {};
 
 int ast::line = 0;
-
+extern std::shared_ptr<ast::Program> ourProgram;
 
 namespace ast
 {
@@ -20,6 +20,26 @@ namespace ast
 
 	void dfs()
 	{
+		sort(ourProgram->variables.begin(), ourProgram->variables.end(),
+			[](shared_ptr<ast::Variable> a, shared_ptr<ast::Variable> b) -> bool
+			{
+				return a->name < b->name;
+			});
+		std::cout << "ourProgram contains:\nvariables:\n";
+		for (auto v : ourProgram->variables)
+		{
+			std::cout << v->name << "\n";
+			if (v->value == nullptr)
+				continue;
+			std::cout << "has value\n";
 
+		}
+		std::cout << "Routines:\n";
+		for (auto r : ourProgram->routines)
+		{
+			std::cout << r->name << " with variables :\n";
+			for (auto v : r->body->variables)
+				std::cout << v->name << "\n";
+		}
 	}
 }

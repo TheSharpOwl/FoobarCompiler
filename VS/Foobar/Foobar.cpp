@@ -11,7 +11,7 @@ int main()
     scanner.set_file("inp.txt");
     yy::parser p;
 	p.parse();
-
+    ast::dfs();
     return 0;
 }
 namespace yy
