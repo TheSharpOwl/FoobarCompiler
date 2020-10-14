@@ -126,10 +126,9 @@ program:
 
 VariableDeclaration: VAR IDENTIFIER COL type { $$ = std::make_shared<ast::Variable>($2, $4); }
 | VAR IDENTIFIER IS Expression {
-    auto temp = std::make_shared<ast::Variable>($2, $4, nullptr);
-    temp->value = $4;
+    ast::Type::TypeTable[$2] = std::make_shared<ast::Type>(ast::Expression::getType($4));
+    auto temp = std::make_shared<ast::Variable>($2, $4, ast::Type::TypeTable[$2]);
     $$ = temp;
-    /*TODO add expression type func as 4th param*/
      }
 | VAR IDENTIFIER COL type IS Expression {
     auto temp = std::make_shared<ast::Variable>($2, $4);
@@ -142,7 +141,8 @@ TypeDeclaration: TKEY IDENTIFIER IS type { ast::Type::TypeTable.insert({$2,$4});
 ;
 
 RoutineDeclaration: RUT IDENTIFIER LBR Parameters RBR IS Body END { $$ = std::make_shared<ast::Routine>($2, $4, $7, nullptr);}
-| RUT IDENTIFIER LBR Parameters RBR COL type IS Body END {  $$ = std::make_shared<ast::Routine>($2, $4, $9, $7);}
+| RUT IDENTIFIER LBR Parameters RBR COL type IS Body END {  $$ = std::make_shared<ast::Routine>($2, $4, $9, $7); 
+ast::Type::TypeTable[$2] = $7;}
 ;
 
 Parameters: ParameterDeclaration {($$).push_back($1); }
@@ -192,7 +192,7 @@ ReturnStatement: RTN EOL {   $$ = std::make_shared<ast::ReturnStatement>(nullptr
 Assignment: ModifiablePrimary ASN Expression {$$ = std::make_shared<ast::Assignment>(std::get<0>(($1)->value), $3);}
 ;
 
-RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>(); ($$)->args = std::move($3);}
+RoutineCall: IDENTIFIER LBR Arguments RBR { $$ = std::make_shared<ast::RoutineCall>($1); ($$)->args = std::move($3);}
 ;
 
 WhileLoop: WHL Expression LOP Body END { $$ = std::make_shared<ast::WhileLoop>($2, $4);}
@@ -242,7 +242,7 @@ Primary: INTEGER {                      $$ = std::make_shared<ast::Expression>($
 | TRU {                                 $$ = std::make_shared<ast::Expression>($1); }
 | FLS {                                 $$ = std::make_shared<ast::Expression>($1); }
 | ModifiablePrimary{    $$ = $1; }
-| RoutineCall {      /*TODO change */   $$ = std::make_shared<ast::Expression>("RoutineCall"); }
+| RoutineCall {$$ = std::make_shared<ast::Expression>(($1)->name);}
 ;
 
 VariableAcess: {$$ = nullptr;}

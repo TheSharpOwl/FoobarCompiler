@@ -60,19 +60,29 @@ namespace ast
 		std::cout << "ourProgram contains:\nvariables:\n";
 		for (auto v : ourProgram->variables)
 		{
-			std::string x = v->name + "has value"; // TODO important
-			std::cout << v->name << " ";
-			if (v->value == nullptr)
-				std::cout << "(no value yet)\n";
-			else
-				std::cout << "has value of type " << Expression::getType(v->value) << "\n";
+			printVariable(v);
 		}
 		std::cout << "Routines:\n";
 		for (auto r : ourProgram->routines)
 		{
-			std::cout << r->name << " with variables :\n";
+			std::cout << r->name;
+			std::cout << " with parameters: \n";
+			for (auto p : r->parameters)
+				std::cout << p->name << " of type " << p->type->name <<"\n";
+			std::cout << std::endl;
+			std::cout  << "with variables :\n";
 			for (auto v : r->body->variables)
-				std::cout << v->name << "\n";
+				printVariable(v);
 		}
+	}
+	void printVariable(std::shared_ptr<Variable> v)
+	{
+		std::string x = v->name + "has value";
+		std::cout << v->name << " ";
+		if (v->value == nullptr)
+			std::cout << "(no value yet)";
+		else
+			std::cout << "of type " << Expression::getType(v->value);
+		std::cout <<  " at line " << v->start << std::endl;
 	}
 }

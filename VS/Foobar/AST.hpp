@@ -260,7 +260,10 @@ namespace ast
 	struct RoutineCall : Statement
 	{
 		vsp<Expression> args;
-
+		RoutineCall(const string& ident)
+		{
+			name = ident;
+		}
 	};
 	struct BuiltinType : Type
 	{
@@ -296,6 +299,7 @@ namespace ast
 	};
 
 	void dfs();
+	void printVariable(sp<Variable> var);
 }
 
 // TODO : make sure type aliases can only be defined in the outside program and handle it.
