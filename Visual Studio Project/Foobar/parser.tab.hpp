@@ -45,18 +45,21 @@
 #ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 // "%code requires" blocks.
-#line 9 "parser.ypp"
+#line 8 "parser.ypp"
 
+    #pragma once
     #include <iostream>
     #include <string>
-
+    #include "AST.hpp"
+    
     // forward decleration
     namespace yy
     {
         class parser;
     }
+    template <typename T> using sp = std::shared_ptr<T>;
 
-#line 60 "parser.tab.hpp"
+#line 63 "parser.tab.hpp"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -190,7 +193,7 @@
 #endif
 
 namespace yy {
-#line 194 "parser.tab.hpp"
+#line 197 "parser.tab.hpp"
 
 
 
@@ -404,22 +407,71 @@ namespace yy {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // TRU
+      // FLS
+      char dummy1[sizeof (bool)];
+
       // REAL
-      char dummy1[sizeof (double)];
+      char dummy2[sizeof (double)];
 
       // INTEGER
-      char dummy2[sizeof (int)];
+      char dummy3[sizeof (int)];
 
-      // IDENTIFIER
-      // type
-      // PrimitiveType
-      // RecordType
       // ArrayType
-      // RoutineCall
+      char dummy4[sizeof (sp<ast::Array> )];
+
+      // Assignment
+      char dummy5[sizeof (sp<ast::Assignment> )];
+
+      // Body
+      char dummy6[sizeof (sp<ast::Block> )];
+
+      // PrimitiveType
+      char dummy7[sizeof (sp<ast::BuiltinType> )];
+
       // Expression
       // Primary
+      // VariableAcess
       // ModifiablePrimary
-      char dummy3[sizeof (std::string)];
+      char dummy8[sizeof (sp<ast::Expression> )];
+
+      // RecordType
+      char dummy9[sizeof (sp<ast::Record> )];
+
+      // ReturnStatement
+      char dummy10[sizeof (sp<ast::ReturnStatement> )];
+
+      // RoutineDeclaration
+      char dummy11[sizeof (sp<ast::Routine> )];
+
+      // RoutineCall
+      char dummy12[sizeof (sp<ast::RoutineCall> )];
+
+      // Statement
+      // WhileLoop
+      // ForLoop
+      // IfStatement
+      char dummy13[sizeof (sp<ast::Statement> )];
+
+      // type
+      char dummy14[sizeof (sp<ast::Type> )];
+
+      // VariableDeclaration
+      // ParameterDeclaration
+      char dummy15[sizeof (sp<ast::Variable> )];
+
+      // IDENTIFIER
+      char dummy16[sizeof (std::string)];
+
+      // Range
+      char dummy17[sizeof (std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool> )];
+
+      // Arguments
+      char dummy18[sizeof (std::vector<sp<ast::Expression> > )];
+
+      // Parameters
+      // VariableDeclarationBlock
+      char dummy19[sizeof (std::vector<sp<ast::Variable> > )];
     };
 
     /// The size of the largest semantic type.
@@ -584,31 +636,30 @@ namespace yy {
         S_EOL = 50,                              // EOL
         S_YYACCEPT = 51,                         // $accept
         S_program = 52,                          // program
-        S_SimpleDeclaration = 53,                // SimpleDeclaration
-        S_VariableDeclaration = 54,              // VariableDeclaration
-        S_TypeDeclaration = 55,                  // TypeDeclaration
-        S_RoutineDeclaration = 56,               // RoutineDeclaration
-        S_Parameters = 57,                       // Parameters
-        S_ParameterDeclaration = 58,             // ParameterDeclaration
-        S_type = 59,                             // type
-        S_PrimitiveType = 60,                    // PrimitiveType
-        S_RecordType = 61,                       // RecordType
-        S_ArrayType = 62,                        // ArrayType
-        S_Body = 63,                             // Body
-        S_Statement = 64,                        // Statement
-        S_Returntatement = 65,                   // Returntatement
-        S_Assignment = 66,                       // Assignment
-        S_RoutineCall = 67,                      // RoutineCall
-        S_WhileLoop = 68,                        // WhileLoop
-        S_ForLoop = 69,                          // ForLoop
-        S_Range = 70,                            // Range
-        S_IfStatement = 71,                      // IfStatement
-        S_VariableDeclarationBlock = 72,         // VariableDeclarationBlock
-        S_Expression = 73,                       // Expression
-        S_Arguments = 74,                        // Arguments
-        S_Primary = 75,                          // Primary
-        S_VariableAcess = 76,                    // VariableAcess
-        S_ModifiablePrimary = 77                 // ModifiablePrimary
+        S_VariableDeclaration = 53,              // VariableDeclaration
+        S_TypeDeclaration = 54,                  // TypeDeclaration
+        S_RoutineDeclaration = 55,               // RoutineDeclaration
+        S_Parameters = 56,                       // Parameters
+        S_ParameterDeclaration = 57,             // ParameterDeclaration
+        S_type = 58,                             // type
+        S_PrimitiveType = 59,                    // PrimitiveType
+        S_RecordType = 60,                       // RecordType
+        S_ArrayType = 61,                        // ArrayType
+        S_Body = 62,                             // Body
+        S_Statement = 63,                        // Statement
+        S_ReturnStatement = 64,                  // ReturnStatement
+        S_Assignment = 65,                       // Assignment
+        S_RoutineCall = 66,                      // RoutineCall
+        S_WhileLoop = 67,                        // WhileLoop
+        S_ForLoop = 68,                          // ForLoop
+        S_Range = 69,                            // Range
+        S_IfStatement = 70,                      // IfStatement
+        S_VariableDeclarationBlock = 71,         // VariableDeclarationBlock
+        S_Expression = 72,                       // Expression
+        S_Arguments = 73,                        // Arguments
+        S_Primary = 74,                          // Primary
+        S_VariableAcess = 75,                    // VariableAcess
+        S_ModifiablePrimary = 76                 // ModifiablePrimary
       };
     };
 
@@ -643,6 +694,11 @@ namespace yy {
       {
         switch (this->kind ())
     {
+      case symbol_kind::S_TRU: // TRU
+      case symbol_kind::S_FLS: // FLS
+        value.move< bool > (std::move (that.value));
+        break;
+
       case symbol_kind::S_REAL: // REAL
         value.move< double > (std::move (that.value));
         break;
@@ -651,16 +707,76 @@ namespace yy {
         value.move< int > (std::move (that.value));
         break;
 
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
       case symbol_kind::S_ArrayType: // ArrayType
-      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.move< sp<ast::Array>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Assignment: // Assignment
+        value.move< sp<ast::Assignment>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.move< sp<ast::Block>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.move< sp<ast::BuiltinType>  > (std::move (that.value));
+        break;
+
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
+        value.move< sp<ast::Expression>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_RecordType: // RecordType
+        value.move< sp<ast::Record>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.move< sp<ast::ReturnStatement>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.move< sp<ast::Routine>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.move< sp<ast::RoutineCall>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.move< sp<ast::Statement>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_type: // type
+        value.move< sp<ast::Type>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_VariableDeclaration: // VariableDeclaration
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.move< sp<ast::Variable>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.move< std::string > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Range: // Range
+        value.move< std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.move< std::vector<sp<ast::Expression> >  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_VariableDeclarationBlock: // VariableDeclarationBlock
+        value.move< std::vector<sp<ast::Variable> >  > (std::move (that.value));
         break;
 
       default:
@@ -681,6 +797,17 @@ namespace yy {
 #else
       basic_symbol (typename Base::kind_type t)
         : Base (t)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, bool&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const bool& v)
+        : Base (t)
+        , value (v)
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -706,12 +833,177 @@ namespace yy {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Array> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Array> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Assignment> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Assignment> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Block> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Block> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::BuiltinType> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::BuiltinType> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Expression> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Expression> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Record> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Record> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::ReturnStatement> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::ReturnStatement> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Routine> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Routine> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::RoutineCall> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::RoutineCall> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Statement> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Statement> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Type> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Type> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Variable> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Variable> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v)
         : Base (t)
         , value (std::move (v))
       {}
 #else
       basic_symbol (typename Base::kind_type t, const std::string& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<sp<ast::Expression> > && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<sp<ast::Expression> > & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<sp<ast::Variable> > && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<sp<ast::Variable> > & v)
         : Base (t)
         , value (v)
       {}
@@ -739,6 +1031,11 @@ namespace yy {
         // Value type destructor.
 switch (yykind)
     {
+      case symbol_kind::S_TRU: // TRU
+      case symbol_kind::S_FLS: // FLS
+        value.template destroy< bool > ();
+        break;
+
       case symbol_kind::S_REAL: // REAL
         value.template destroy< double > ();
         break;
@@ -747,16 +1044,76 @@ switch (yykind)
         value.template destroy< int > ();
         break;
 
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
       case symbol_kind::S_ArrayType: // ArrayType
-      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.template destroy< sp<ast::Array>  > ();
+        break;
+
+      case symbol_kind::S_Assignment: // Assignment
+        value.template destroy< sp<ast::Assignment>  > ();
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.template destroy< sp<ast::Block>  > ();
+        break;
+
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.template destroy< sp<ast::BuiltinType>  > ();
+        break;
+
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
+        value.template destroy< sp<ast::Expression>  > ();
+        break;
+
+      case symbol_kind::S_RecordType: // RecordType
+        value.template destroy< sp<ast::Record>  > ();
+        break;
+
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.template destroy< sp<ast::ReturnStatement>  > ();
+        break;
+
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.template destroy< sp<ast::Routine>  > ();
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.template destroy< sp<ast::RoutineCall>  > ();
+        break;
+
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.template destroy< sp<ast::Statement>  > ();
+        break;
+
+      case symbol_kind::S_type: // type
+        value.template destroy< sp<ast::Type>  > ();
+        break;
+
+      case symbol_kind::S_VariableDeclaration: // VariableDeclaration
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.template destroy< sp<ast::Variable>  > ();
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.template destroy< std::string > ();
+        break;
+
+      case symbol_kind::S_Range: // Range
+        value.template destroy< std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool>  > ();
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.template destroy< std::vector<sp<ast::Expression> >  > ();
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_VariableDeclarationBlock: // VariableDeclarationBlock
+        value.template destroy< std::vector<sp<ast::Variable> >  > ();
         break;
 
       default:
@@ -849,13 +1206,26 @@ switch (yykind)
       symbol_type (int tok)
         : super_type(token_type (tok))
       {
-        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::TRU || tok == token::FLS || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
+        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
       }
 #else
       symbol_type (int tok)
         : super_type(token_type (tok))
       {
-        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::TRU || tok == token::FLS || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
+        YY_ASSERT (tok == token::YYEOF || tok == token::YYerror || tok == token::YYUNDEF || tok == token::ADD || tok == token::SUB || tok == token::MUL || tok == token::DIV || tok == token::MOD || tok == token::GRT || tok == token::GRTE || tok == token::LES || tok == token::LESE || tok == token::EQ || tok == token::NEQ || tok == token::AND || tok == token::OR || tok == token::XOR || tok == token::IF || tok == token::THEN || tok == token::ELSE || tok == token::VAR || tok == token::COL || tok == token::TKEY || tok == token::RUT || tok == token::LBR || tok == token::RBR || tok == token::COM || tok == token::RTN || tok == token::IS || tok == token::RNG || tok == token::IN || tok == token::REV || tok == token::FOR || tok == token::WHL || tok == token::LOP || tok == token::END || tok == token::RCRD || tok == token::ARY || tok == token::LAR || tok == token::RAR || tok == token::DOTN || tok == token::ASN || tok == token::ITYPE || tok == token::RTYPE || tok == token::BTYPE || tok == token::EOL);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok, bool v)
+        : super_type(token_type (tok), std::move (v))
+      {
+        YY_ASSERT (tok == token::TRU || tok == token::FLS);
+      }
+#else
+      symbol_type (int tok, const bool& v)
+        : super_type(token_type (tok), v)
+      {
+        YY_ASSERT (tok == token::TRU || tok == token::FLS);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1295,31 +1665,31 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_TRU ()
+      make_TRU (bool v)
       {
-        return symbol_type (token::TRU);
+        return symbol_type (token::TRU, std::move (v));
       }
 #else
       static
       symbol_type
-      make_TRU ()
+      make_TRU (const bool& v)
       {
-        return symbol_type (token::TRU);
+        return symbol_type (token::TRU, v);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_FLS ()
+      make_FLS (bool v)
       {
-        return symbol_type (token::FLS);
+        return symbol_type (token::FLS, std::move (v));
       }
 #else
       static
       symbol_type
-      make_FLS ()
+      make_FLS (const bool& v)
       {
-        return symbol_type (token::FLS);
+        return symbol_type (token::FLS, v);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -2016,8 +2386,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 453,     ///< Last index in yytable_.
-      yynnts_ = 27,  ///< Number of nonterminal symbols.
+      yylast_ = 448,     ///< Last index in yytable_.
+      yynnts_ = 26,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
 
@@ -2086,6 +2456,11 @@ switch (yykind)
   {
     switch (this->kind ())
     {
+      case symbol_kind::S_TRU: // TRU
+      case symbol_kind::S_FLS: // FLS
+        value.copy< bool > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_REAL: // REAL
         value.copy< double > (YY_MOVE (that.value));
         break;
@@ -2094,16 +2469,76 @@ switch (yykind)
         value.copy< int > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
       case symbol_kind::S_ArrayType: // ArrayType
-      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.copy< sp<ast::Array>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Assignment: // Assignment
+        value.copy< sp<ast::Assignment>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.copy< sp<ast::Block>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.copy< sp<ast::BuiltinType>  > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
+        value.copy< sp<ast::Expression>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_RecordType: // RecordType
+        value.copy< sp<ast::Record>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.copy< sp<ast::ReturnStatement>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.copy< sp<ast::Routine>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.copy< sp<ast::RoutineCall>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.copy< sp<ast::Statement>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_type: // type
+        value.copy< sp<ast::Type>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_VariableDeclaration: // VariableDeclaration
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.copy< sp<ast::Variable>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.copy< std::string > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Range: // Range
+        value.copy< std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.copy< std::vector<sp<ast::Expression> >  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_VariableDeclarationBlock: // VariableDeclarationBlock
+        value.copy< std::vector<sp<ast::Variable> >  > (YY_MOVE (that.value));
         break;
 
       default:
@@ -2135,6 +2570,11 @@ switch (yykind)
     super_type::move (s);
     switch (this->kind ())
     {
+      case symbol_kind::S_TRU: // TRU
+      case symbol_kind::S_FLS: // FLS
+        value.move< bool > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_REAL: // REAL
         value.move< double > (YY_MOVE (s.value));
         break;
@@ -2143,16 +2583,76 @@ switch (yykind)
         value.move< int > (YY_MOVE (s.value));
         break;
 
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_PrimitiveType: // PrimitiveType
-      case symbol_kind::S_RecordType: // RecordType
       case symbol_kind::S_ArrayType: // ArrayType
-      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.move< sp<ast::Array>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Assignment: // Assignment
+        value.move< sp<ast::Assignment>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Body: // Body
+        value.move< sp<ast::Block>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_PrimitiveType: // PrimitiveType
+        value.move< sp<ast::BuiltinType>  > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_Expression: // Expression
       case symbol_kind::S_Primary: // Primary
+      case symbol_kind::S_VariableAcess: // VariableAcess
       case symbol_kind::S_ModifiablePrimary: // ModifiablePrimary
+        value.move< sp<ast::Expression>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_RecordType: // RecordType
+        value.move< sp<ast::Record>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_ReturnStatement: // ReturnStatement
+        value.move< sp<ast::ReturnStatement>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_RoutineDeclaration: // RoutineDeclaration
+        value.move< sp<ast::Routine>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_RoutineCall: // RoutineCall
+        value.move< sp<ast::RoutineCall>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Statement: // Statement
+      case symbol_kind::S_WhileLoop: // WhileLoop
+      case symbol_kind::S_ForLoop: // ForLoop
+      case symbol_kind::S_IfStatement: // IfStatement
+        value.move< sp<ast::Statement>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_type: // type
+        value.move< sp<ast::Type>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_VariableDeclaration: // VariableDeclaration
+      case symbol_kind::S_ParameterDeclaration: // ParameterDeclaration
+        value.move< sp<ast::Variable>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
         value.move< std::string > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Range: // Range
+        value.move< std::tuple<sp<ast::Expression>,sp<ast::Expression>, bool>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Arguments: // Arguments
+        value.move< std::vector<sp<ast::Expression> >  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_VariableDeclarationBlock: // VariableDeclarationBlock
+        value.move< std::vector<sp<ast::Variable> >  > (YY_MOVE (s.value));
         break;
 
       default:
@@ -2216,7 +2716,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2220 "parser.tab.hpp"
+#line 2720 "parser.tab.hpp"
 
 
 
